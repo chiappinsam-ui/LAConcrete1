@@ -1,4 +1,14 @@
-(() => {
+ï»¿(() => {
+  // Ctrl+Alt+E toggles edit mode ON by adding ?edit=1 then reloading
+  document.addEventListener("keydown", (e) => {
+    if (e.ctrlKey && e.altKey && (e.key === "e" || e.key === "E")) {
+      e.preventDefault();
+      const url = new URL(location.href);
+      url.searchParams.set("edit", "1");
+      location.href = url.toString();
+    }
+  });
+
   // turn on only when ?edit=1
   const params = new URLSearchParams(location.search);
   const isEdit = params.get("edit") === "1";
@@ -47,7 +57,7 @@
 
   const badge = document.createElement("div");
   badge.className = "__editBadge";
-  badge.textContent = "EDIT MODE ON — click any image to replace";
+  badge.textContent = "EDIT MODE ON - click any image to replace";
   document.body.appendChild(badge);
 
   let currentImg = null;
