@@ -6,6 +6,19 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+# Serve your static folders (these MUST match your repo folder names)
+for folder in [
+    "assets",
+    "index1_files",
+    "menu2_files",
+    "gallery5_files",
+    "contact6_files",
+    "catering3_files",
+    "bookins4html_files",   # only if it exists
+]:
+    if os.path.isdir(folder):
+        app.mount(f"/{folder}", StaticFiles(directory=folder), name=folder)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
