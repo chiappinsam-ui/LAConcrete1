@@ -1,12 +1,15 @@
-import os, time, re
+import os, time, re, json
+from pathlib import Path
 from fastapi import FastAPI, File, UploadFile, Header, HTTPException
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Serve your static folders (these MUST match your repo folder names)
+# -------------------------
+# Static folders (only mount if they exist)
+# -------------------------
 for folder in [
     "assets",
     "index1_files",
@@ -14,40 +17,40 @@ for folder in [
     "gallery5_files",
     "contact6_files",
     "catering3_files",
-    "bookins4html_files",   # only if it exists
+    "bookins4html_files",
 ]:
     if os.path.isdir(folder):
         app.mount(f"/{folder}", StaticFiles(directory=folder), name=folder)
 
+# -------------------------
+# CORS
+# -------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://duplicate.mobilewoodfirepizza.com.au",
         "https://mobilewoodfirepizza.com.au",
         "http://127.0.0.1:8000",
+        "http://localhost:8000",
     ],
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# --- settings ---
-UPLOAD_DIR = "uploads"
-os.makedirs(UPLOAD_DIR, exist_ok=True)
-app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
+# -------------------------
+# Storage (disk)
+# -------------------------
+DATA_DIR = Path("data")
+UPLOADS_DIR = DATA_DIR / "uploads"
+DATA_DIR.mkdir(exist_ok=True)
+UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 
-# simple shared password token (set this in Render env later)
+app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
+
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "devtoken")
 
-# the editable slots your admin page will show
 SLOTS = ["home_hero", "gallery_01", "gallery_02", "about_banner"]
 SAFE_SLOT_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
-
-def file_path(slot: str):
-    return os.path.join(UPLOAD_DIR, f"{slot}.jpg")
-
-def absolute_url(request_host: str, slot: str):
-    # cache-bust with timestamp
-    return f"{request_host}/uploads/{slot}.jpg?v={int(time.time())}"
 
 def require_admin(x_admin_token: str | None):
     if x_admin_token != ADMIN_TOKEN:
@@ -57,17 +60,67 @@ def validate_slot(slot: str):
     if not SAFE_SLOT_PATTERN.fullmatch(slot):
         raise HTTPException(status_code=400, detail="Invalid slot id")
 
+def file_path(slot: str) -> Path:
+    return UPLOADS_DIR / f"{slot}.jpg"
+
+def absolute_url(base: str, slot: str):
+    return f"{base}/uploads/{slot}.jpg?v={int(time.time())}"
+
+def serve_html(*candidates: str):
+    for name in candidates:
+        if os.path.exists(name):
+            return FileResponse(name)
+    raise HTTPException(404, detail=f"Missing file. Tried: {', '.join(candidates)}")
+
+# -------------------------
+# Site pages
+# -------------------------
+@app.get("/")
+def home():
+    return serve_html("index1.html", "index.html")
+
+@app.get("/menu")
+def menu():
+    return serve_html("menu2.html", "menu.html")
+
+@app.get("/gallery")
+def gallery():
+    return serve_html("gallery5.html", "gallery.html")
+
+@app.get("/contact")
+def contact():
+    return serve_html("contact6.html", "contact.html")
+
+@app.get("/catering")
+def catering():
+    return serve_html("catering3.html", "catering.html")
+
+@app.get("/bookings")
+def bookings():
+    # you had "bookins4.html" - keep both options just in case
+    return serve_html("bookins4.html", "bookings.html")
+
+# -------------------------
+# Admin API
+# -------------------------
 @app.get("/manifest.json")
 def manifest(host: str | None = Header(default=None)):
-    # host header gives us current base URL (works local + Render)
-    base = f"http://{host}" if host and "localhost" in host else (f"https://{host}" if host else "")
+    base = ""
+    if host:
+        base = f"http://{host}" if "localhost" in host or "127.0.0.1" in host else f"https://{host}"
+
     out = {}
     for slot in SLOTS:
         out[slot] = absolute_url(base, slot) if base else f"/uploads/{slot}.jpg?v={int(time.time())}"
     return JSONResponse(out)
 
 @app.post("/admin/upload/{slot}")
-async def upload(slot: str, file: UploadFile = File(...), x_admin_token: str | None = Header(default=None), host: str | None = Header(default=None)):
+async def upload(
+    slot: str,
+    file: UploadFile = File(...),
+    x_admin_token: str | None = Header(default=None),
+    host: str | None = Header(default=None),
+):
     require_admin(x_admin_token)
     validate_slot(slot)
 
@@ -75,16 +128,16 @@ async def upload(slot: str, file: UploadFile = File(...), x_admin_token: str | N
     if not data:
         raise HTTPException(400, "Empty file")
 
-    with open(file_path(slot), "wb") as f:
-        f.write(data)
+    file_path(slot).write_bytes(data)
 
-    base = f"http://{host}" if host and "localhost" in host else (f"https://{host}" if host else "")
-    return {"ok": True, "slot": slot, "url": absolute_url(base, slot)}
+    base = ""
+    if host:
+        base = f"http://{host}" if "localhost" in host or "127.0.0.1" in host else f"https://{host}"
+    return {"ok": True, "slot": slot, "url": absolute_url(base, slot) if base else f"/uploads/{slot}.jpg?v={int(time.time())}"}
 
 @app.get("/admin", response_class=HTMLResponse)
 def admin_page():
-    # minimal click-to-replace UI
-    slots_js = str(SLOTS).replace("'", '"')
+    slots_js = json.dumps(SLOTS)
     return f"""
 <!doctype html>
 <html>
@@ -112,7 +165,6 @@ def admin_page():
   </div>
 
   <div class="hint">Click an image to replace it.</div><br/>
-
   <input id="file" type="file" accept="image/*" style="display:none" />
   <div id="grid" class="grid"></div>
 
@@ -125,6 +177,10 @@ def admin_page():
 
   async function load() {{
     const res = await fetch("/manifest.json", {{ cache: "no-store" }});
+    if (!res.ok) {{
+      alert("manifest.json failed: " + await res.text());
+      return;
+    }}
     const manifest = await res.json();
 
     grid.innerHTML = "";
@@ -186,105 +242,3 @@ def admin_page():
 </body>
 </html>
 """
-from fastapi import FastAPI, UploadFile, File
-from fastapi.responses import FileResponse
-from fastapi.staticfiles import StaticFiles
-
-app = FastAPI()
-
-# Serve static folders (css/js/images) if you have them
-app.mount("/assets", StaticFiles(directory="assets"), name="assets")
-
-# Serve the website pages
-@app.get("/")
-def home():
-    return FileResponse("index1.html")
-
-@app.get("/menu")
-def menu():
-    return FileResponse("menu2.html")
-
-@app.get("/gallery")
-def gallery():
-    return FileResponse("gallery5.html")
-
-@app.get("/contact")
-def contact():
-    return FileResponse("contact6.html")
-
-@app.get("/catering")
-def catering():
-    return FileResponse("catering3.html")
-
-@app.get("/bookings")
-def bookings():
-    return FileResponse("bookins4.html")  # double check your filename spelling
-
-# your upload endpoint can stay below
-@app.post("/admin/upload/{slot}")
-async def upload(slot: str, file: UploadFile = File(...)):
-    data = await file.read()
-    return {"ok": True, "slot": slot, "filename": file.filename, "size": len(data)}
-from fastapi import FastAPI, UploadFile, File, Header, HTTPException
-from fastapi.responses import FileResponse, JSONResponse
-from fastapi.staticfiles import StaticFiles
-import os, json, time
-from pathlib import Path
-
-app = FastAPI()
-
-# ====== storage on disk (simple) ======
-DATA_DIR = Path("data")
-UPLOADS_DIR = DATA_DIR / "uploads"
-MANIFEST_PATH = DATA_DIR / "manifest.json"
-
-DATA_DIR.mkdir(exist_ok=True)
-UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
-
-def load_manifest():
-    if MANIFEST_PATH.exists():
-        return json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    return {}
-
-def save_manifest(m):
-    MANIFEST_PATH.write_text(json.dumps(m, indent=2), encoding="utf-8")
-
-manifest = load_manifest()
-
-# Serve your normal static assets if needed
-# (adjust folder names if different)
-app.mount("/assets", StaticFiles(directory="assets"), name="assets")
-app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
-
-# ====== simple admin auth (header token) ======
-# Set this as a Render env var: ADMIN_TOKEN = something
-ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "changeme")
-
-def require_admin(x_admin_token: str | None):
-    if x_admin_token != ADMIN_TOKEN:
-        raise HTTPException(status_code=401, detail="Unauthorized")
-
-# ====== Serve HTML pages ======
-@app.get("/")
-def home():
-    return FileResponse("index1.html")
-
-@app.get("/menu")
-def menu():
-    return FileResponse("menu2.html")
-
-@app.get("/gallery")
-def gallery():
-    return FileResponse("gallery5.html")
-
-@app.get("/contact")
-def contact():
-    return FileResponse("contact6.html")
-
-@app.get("/catering")
-def catering():
-    return FileResponse("catering3.html")
-
-@app.get("/bookings")
-def bookings():
-    return FileResponse("bookins4.html")
