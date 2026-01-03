@@ -274,4 +274,4 @@ def catering():
 
 @app.get("/bookings")
 def bookings():
-    return FileResponse("booki
+    return FileResponse("bookins4.html")
