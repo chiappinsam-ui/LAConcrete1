@@ -173,3 +173,42 @@ def admin_page():
 </body>
 </html>
 """
+from fastapi import FastAPI, UploadFile, File
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+app = FastAPI()
+
+# Serve static folders (css/js/images) if you have them
+app.mount("/assets", StaticFiles(directory="assets"), name="assets")
+
+# Serve the website pages
+@app.get("/")
+def home():
+    return FileResponse("index1.html")
+
+@app.get("/menu")
+def menu():
+    return FileResponse("menu2.html")
+
+@app.get("/gallery")
+def gallery():
+    return FileResponse("gallery5.html")
+
+@app.get("/contact")
+def contact():
+    return FileResponse("contact6.html")
+
+@app.get("/catering")
+def catering():
+    return FileResponse("catering3.html")
+
+@app.get("/bookings")
+def bookings():
+    return FileResponse("bookins4.html")  # double check your filename spelling
+
+# your upload endpoint can stay below
+@app.post("/admin/upload/{slot}")
+async def upload(slot: str, file: UploadFile = File(...)):
+    data = await file.read()
+    return {"ok": True, "slot": slot, "filename": file.filename, "size": len(data)}
