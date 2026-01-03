@@ -1,9 +1,21 @@
-import os, time
+import os, time, re
 from fastapi import FastAPI, File, UploadFile, Header, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "https://duplicate.mobilewoodfirepizza.com.au",
+        "https://mobilewoodfirepizza.com.au",
+        "http://127.0.0.1:8000",
+    ],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- settings ---
 UPLOAD_DIR = "uploads"
@@ -15,6 +27,7 @@ ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "devtoken")
 
 # the editable slots your admin page will show
 SLOTS = ["home_hero", "gallery_01", "gallery_02", "about_banner"]
+SAFE_SLOT_PATTERN = re.compile(r"^[A-Za-z0-9_-]+$")
 
 def file_path(slot: str):
     return os.path.join(UPLOAD_DIR, f"{slot}.jpg")
@@ -26,6 +39,10 @@ def absolute_url(request_host: str, slot: str):
 def require_admin(x_admin_token: str | None):
     if x_admin_token != ADMIN_TOKEN:
         raise HTTPException(status_code=401, detail="Unauthorized")
+
+def validate_slot(slot: str):
+    if not SAFE_SLOT_PATTERN.fullmatch(slot):
+        raise HTTPException(status_code=400, detail="Invalid slot id")
 
 @app.get("/manifest.json")
 def manifest(host: str | None = Header(default=None)):
@@ -39,8 +56,7 @@ def manifest(host: str | None = Header(default=None)):
 @app.post("/admin/upload/{slot}")
 async def upload(slot: str, file: UploadFile = File(...), x_admin_token: str | None = Header(default=None), host: str | None = Header(default=None)):
     require_admin(x_admin_token)
-    if slot not in SLOTS:
-        raise HTTPException(400, "Unknown slot")
+    validate_slot(slot)
 
     data = await file.read()
     if not data:
