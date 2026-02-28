@@ -1,11 +1,18 @@
 import subprocess
-from flask import Flask, request
+from flask import Flask, request, send_file
+from flask_cors import CORS
 from google import genai
 
 app = Flask(__name__)
+CORS(app)
 
 # 1. Boot up the AI connection
 client = genai.Client(api_key="AIzaSyDyknMlCojGvlF1gMToeOAakajY4-aGr-4")
+
+# -> THIS IS THE NEW PART: Serving your UI directly! <-
+@app.route('/')
+def home():
+    return send_file('index.html')
 
 @app.route('/execute', methods=['POST'])
 def handle_request():

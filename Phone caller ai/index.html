@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    
+    <title>AI Caller</title>
+    
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #121212;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        textarea {
+            width: 90%;
+            height: 120px;
+            margin: 20px 0;
+            padding: 10px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 16px;
+        }
+        button {
+            padding: 15px 40px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            background: #ff8c00; 
+            color: white;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Send to Brain</h2>
+    <textarea id="commandInput" placeholder="What do you want the AI to do?"></textarea>
+    <br>
+    <button onclick="fireCommand()">Send Command</button>
+    <p id="status"></p>
+
+    <script>
+        async function fireCommand() {
+            const commandText = document.getElementById('commandInput').value;
+            const statusText = document.getElementById('status');
+            
+            if (!commandText) {
+                statusText.innerText = "Please enter a command first.";
+                return;
+            }
+
+            statusText.innerText = "Firing into the tunnel...";
+
+            const payload = {
+                secret: "1234",
+                command: commandText,
+                action: "git_push" 
+            };
+
+            try {
+                // No more Ngrok links to update! It just hits the local server.
+                const response = await fetch("/execute", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    statusText.innerText = "Command received by PC!";
+                    statusText.style.color = "#4CAF50"; 
+                } else {
+                    statusText.innerText = "Connection failed. Is the server running?";
+                    statusText.style.color = "#f44336"; 
+                }
+            } catch (error) {
+                statusText.innerText = "Tunnel broken. Check your server.";
+                statusText.style.color = "#f44336";
+            }
+        }
+    </script>
+
+</body>
+</html>
