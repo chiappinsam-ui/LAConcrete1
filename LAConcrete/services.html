@@ -1,0 +1,1549 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L.A CONCRETE | SERVICES</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'concrete-orange': '#FF4D00',
+              'concrete-bg': '#F0F0F0',
+            }
+          }
+        }
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    
+    <style>
+        /* UPDATED PRELOADER CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Great+Vibes&family=Playfair+Display:ital@1&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap');
+
+        :root {
+            /* Default Dark Mode Variables */
+            --bg-main: #050505;
+            --text-main: #ffffff;
+            --nav-bg: #000000;
+            --nav-border: rgba(255,255,255,0.15);
+            --film-start: rgba(0, 0, 0, 0.4);
+            --film-mid: rgba(0, 0, 0, 0.6);
+            --film-end: rgba(0, 0, 0, 0.85);
+            --card-bg: #111111;
+        }
+
+        body.light-mode {
+            /* Light Mode Variables */
+            --bg-main: #f4f4f4;
+            --text-main: #050505;
+            --nav-bg: rgba(255, 255, 255, 0.95);
+            --nav-border: rgba(0,0,0,0.1);
+            
+            /* Dropped the bottom brightness so it doesn't fog up */
+            --film-start: rgba(255, 255, 255, 0.1);
+            --film-mid: rgba(255, 255, 255, 0.15);
+            --film-end: rgba(255, 255, 255, 0.2); /* Lowered from 1 down to 0.2 */
+            --card-bg: #ffffff;
+        }
+
+        #loader-wrapper {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f2f2f2;
+            z-index: 20000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loader-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* 1. START INVISIBLE */
+            opacity: 0;
+            /* 2. FADE IN ANIMATION (0.8s) */
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* Shrinking the top text to match */
+        .cursive-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3rem; /* Scaled down from 4rem */
+            color: #000000;
+            margin-bottom: -10px;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.8s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        .brand-wrapper {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 8rem;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center; /* Puts LA and CONCRETE'S back on the same line naturally */
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            animation: simpleFade 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+        }
+
+        .services-text {
+            font-family: 'Playfair Display', serif;
+            font-style: italic; /* Gives it a sweeping, soft appearance */
+            font-size: 3rem; /* Perfectly matches your 'Welcome to' size */
+            font-weight: 400;
+            text-transform: none; /* Stops it from forcing ALL CAPS */
+            color: #000000;
+            margin-top: 0px; 
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.8s ease-out forwards;
+            animation-delay: 1.5s; 
+        }
+
+        .la-text {
+            color: #000000;
+            margin-right: 2px;
+        }
+
+        .concrete-text {
+            color: #000000;
+            animation: lightUp 0.3s ease-out forwards;
+            animation-delay: 1.2s; /* Waits for fade-in to finish before lighting up */
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes simpleFade {
+            to { opacity: 1; }
+        }
+
+        @keyframes lightUp {
+            0% { color: #000000; text-shadow: none; }
+            30% { color: #802600; text-shadow: none; } /* Flicker dark */
+            60% { color: #000000; text-shadow: none; } /* Flicker off */
+            100% { 
+                color: #ff4d00; 
+                text-shadow: 0 0 20px rgba(255, 77, 0, 0.4); /* Glow */
+            }
+        }
+
+        .loader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .brand-wrapper { font-size: 15vw; }
+            .cursive-text { font-size: 8vw; }
+        }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* ==========================================================================
+           1. COMPACT PILL NAV (COPIED FROM HOMEPAGE)
+           ========================================================================== */
+        #pill-nav-container {
+            position: fixed;
+            top: 0.5rem;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+
+        .pill-nav-bar {
+            pointer-events: auto;
+            background: var(--nav-bg);
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            border: 1px solid var(--nav-border);
+            transition: background 0.4s ease, border-color 0.4s ease;
+        }
+
+        .nav-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .nav-items-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pill-link {
+            padding: 0.5rem 1rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--text-main); /* Flips to black automatically */
+            opacity: 0.7;
+            transition: color 0.3s ease, opacity 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .pill-link:hover, .pill-link.active {
+            color: #ff4d00;
+            opacity: 1;
+        }
+
+        .nav-quote-btn {
+            background: white;
+            color: black;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-quote-btn:hover {
+            background: #ff4d00;
+            color: white;
+        }
+
+        /* Floating Theme Toggle */
+        .floating-theme-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background-color: var(--text-main); /* Automatically inverts */
+            color: var(--bg-main); /* Automatically inverts */
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease, background-color 0.4s ease, color 0.4s ease;
+            font-size: 1.5rem;
+        }
+
+        .floating-theme-btn:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 900px) {
+            #pill-nav-container { display: none; }
+        }
+
+        /* ==========================================================================
+           2. NEW PREMIUM HERO (WITH DARK FILM)
+           ========================================================================== */
+        .services-hero {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .hero-video-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6; /* Slight dim before the film kicks in */
+            z-index: 0;
+        }
+
+        .hero-film {
+            position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
+            background: linear-gradient(to bottom, var(--film-start) 0%, var(--film-mid) 50%, var(--film-end) 100%);
+            transition: background 0.4s ease;
+        }
+
+        .hero-content-wrapper {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            /* padding-top removed for perfect mathematical centering */
+        }
+
+        .hero-title-main {
+            font-family: 'Kanit', sans-serif; /* Matches your logo exactly */
+            font-weight: 900; /* Maximum thickness */
+            font-size: clamp(4rem, 14vw, 11rem); /* Massive, but fits the screen */
+            line-height: 0.85;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+            letter-spacing: 0px; /* Clean spacing, no squeezing */
+            perspective: 1000px; 
+            /* No more text-strokes or glitchy shadows */
+        }
+
+        .hero-title-main span {
+            display: block; 
+            transform-origin: bottom center; 
+        }
+
+        /* Container to hold the beams behind the text */
+        .light-beams {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 5; /* Behind text, above background */
+            overflow: hidden;
+        }
+
+        /* Targets the word "OUR" */
+        .hero-title-main span:first-child {
+            color: var(--text-main); 
+            transition: color 0.4s ease;
+        }
+
+        /* Targets the word "SERVICES" */
+        .hero-title-main span:last-child {
+            color: #ff4d00;
+            text-shadow: 0px 0px 0px rgba(255, 77, 0, 0);
+            filter: none;
+        }
+
+        .hero-subtitle {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* HIDE SUBTITLE INITIALLY TO PREVENT DOUBLE-LOAD FLASH */
+        .hero-subtitle {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .services-glow-text {
+            will-change: text-shadow;
+        }
+
+        .beam {
+            will-change: transform, opacity;
+            transform-origin: 50% 0%;
+            flex-shrink: 0;
+        }
+
+        /* SCROLL INDICATOR */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            opacity: 0.7;
+            animation: fadeIn 2s ease 2s forwards; /* Wait for hero load */
+            opacity: 0;
+        }
+
+        .mouse {
+            width: 30px;
+            height: 50px;
+            border: 2px solid var(--text-main); /* Flips automatically */
+            border-radius: 20px;
+            position: relative;
+            transition: border-color 0.4s ease;
+        }
+
+        .wheel {
+            width: 4px;
+            height: 8px;
+            background: var(--text-main); /* Flips automatically */
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+            animation: scrollWheel 1.5s infinite;
+            transition: background-color 0.4s ease;
+        }
+
+        @keyframes scrollWheel {
+            0% { top: 8px; opacity: 1; }
+            100% { top: 25px; opacity: 0; }
+        }
+
+        .arrow span {
+            display: block;
+            width: 15px;
+            height: 15px;
+            border-bottom: 2px solid var(--text-main); /* Flips automatically */
+            border-right: 2px solid var(--text-main);
+            transform: rotate(45deg);
+            margin: -5px;
+            animation: arrowScroll 2s infinite;
+            transition: border-color 0.4s ease;
+        }
+
+        .arrow span:nth-child(2) { animation-delay: -0.2s; }
+        .arrow span:nth-child(3) { animation-delay: -0.4s; }
+
+        @keyframes arrowScroll {
+            0% { opacity: 0; transform: rotate(45deg) translate(-10px, -10px); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: rotate(45deg) translate(10px, 10px); }
+        }
+
+        /* ==========================================================================
+           GLOBAL FIXED VIDEO BACKGROUND
+           ========================================================================== */
+        #global-video-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Puts it behind all content */
+            overflow: hidden;
+        }
+
+        #global-video-bg video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .global-film {
+            position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.85) 80%, #000 100%);
+            transition: background 0.4s ease;
+        }
+
+        body,
+        main,
+        .services-hero,
+        .horizontal-scroll-wrapper,
+        #services-3d-tunnel,
+        #animated-footer {
+            background: transparent !important;
+        }
+
+        /* ==========================================================================
+           3D HYPER SCROLL TUNNEL (IMMERSIVE MODE)
+           ========================================================================== */
+        .viewport {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        .world {
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+        
+        .tunnel-item {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform-origin: center center;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tunnel-card {
+            width: 75vw; 
+            max-width: 1600px;
+            height: 80vh; 
+            max-height: 1000px;
+            background: #000; 
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px; /* INCREASED FROM 12px */
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; 
+            position: relative; 
+            box-shadow: 0 40px 80px rgba(0,0,0,0.9), inset 0 0 20px rgba(255,255,255,0.03);
+            transform: translate(-50%, -50%);
+            transition: border-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .tunnel-card img {
+            position: absolute; /* Frees the image to cover the whole card */
+            inset: 0;
+            width: 100%;
+            height: 100%; /* Now takes up 100% instead of 75% */
+            object-fit: cover;
+            z-index: 0; /* Puts it behind the text */
+        }
+
+        /* The fade that protects the text readability */
+        .tunnel-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.4) 40%, transparent 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .tunnel-info {
+            position: relative; /* Lifts it above the image and overlay */
+            z-index: 2;
+            padding: clamp(1.5rem, 4vw, 3rem); 
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .tunnel-text-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .tunnel-text-content h2 {
+            font-size: clamp(3rem, 6vw, 5rem) !important;
+        }
+
+        .tunnel-text-content p {
+            font-size: clamp(1rem, 2vw, 1.25rem) !important;
+            max-width: 80%;
+            margin: 0 auto;
+        }
+
+        .tunnel-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 1500px;
+            height: 1500px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .tunnel-big-text {
+            font-family: 'Kanit', sans-serif;
+            font-size: 18vw;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.04);
+            text-transform: uppercase;
+            white-space: nowrap;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        /* Hide the old footer background image so the video shows through */
+        #animated-footer .absolute.inset-0.z-0 {
+            display: none !important;
+        }
+
+        /* =========================================
+           FROSTED GLASS EFFECT FOR LIGHT MODE
+           ========================================= */
+        body.light-mode .hero-film,
+        body.light-mode .global-film {
+            backdrop-filter: blur(2px); /* Dropped from 12px to 2px */
+            -webkit-backdrop-filter: blur(2px);
+        }
+
+        /* =========================================
+           INDEX-STYLE PREMIUM FOOTER (Sleek Glass)
+           ========================================= */
+           
+        /* The Stat Cards - Wide, Sleek, Glassy Rectangles */
+        .footer-stat-card {
+            background: rgba(10, 10, 10, 0.3); /* Ultra-sheer dark glass */
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.15); /* Thin elegant border */
+            border-radius: 16px; /* Smooth, modern corners */
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            padding: 2.5rem 1.5rem; /* Forces a wide rectangle instead of a square */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-stat-card:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-4px);
+        }
+
+        /* Number hover color transition */
+        .stat-number { transition: color 0.3s ease; }
+        .footer-stat-card:hover .stat-number { color: var(--c-orange) !important; }
+
+        /* The Pill Button (Exact match to Index Page style) */
+        .footer-contact-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 40px;
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.5); /* Thin outline */
+            border-radius: 50px; /* Perfect pill shape */
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-contact-btn:hover {
+            background: white;
+            color: black !important;
+            border-color: white;
+        }
+
+        /* =========================================
+           TRUE GLASS LIGHT MODE OVERRIDES
+           ========================================= */
+
+        /* 1. Completely Transparent Footer Container (No lines, no tint, seamless blend) */
+        body.light-mode footer {
+            background-color: transparent !important; /* Kills the white tint completely */
+            backdrop-filter: none !important; 
+            -webkit-backdrop-filter: none !important; 
+            border-top: none !important; /* Kills that harsh dividing line */
+        }
+
+        /* 2. Razor Sharp Black Text (With a soft safety glow so it never gets lost in the rebar) */
+        body.light-mode footer h2,
+        body.light-mode .footer-anim-left h2,
+        body.light-mode .footer-anim-left p,
+        body.light-mode .stat-number,
+        body.light-mode footer .text-white\/80,
+        body.light-mode footer a.text-white {
+            color: #050505 !important;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8) !important; /* Protects text against dark background lines */
+            -webkit-text-stroke: 0 !important;
+        }
+
+        /* Subtitles & small text */
+        body.light-mode footer .text-white\/50,
+        body.light-mode footer .text-white\/40,
+        body.light-mode footer .text-white\/30 { 
+            color: #333 !important; 
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.9) !important;
+            font-weight: 700 !important;
+        }
+
+        body.light-mode footer a.text-white:hover { color: var(--c-orange) !important; }
+
+        /* 3. Frosty Cards (Slightly more solid than the background so they pop) */
+        body.light-mode .footer-stat-card {
+            background: rgba(255, 255, 255, 0.65) !important; 
+            backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05) !important;
+        }
+        
+        body.light-mode .footer-stat-card:hover {
+            border-color: var(--c-orange) !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        /* 4. Solid Black Pill Button */
+        body.light-mode .footer-contact-btn {
+            background: #050505 !important;
+            color: #ffffff !important;
+            border: none !important;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+            text-shadow: none !important;
+        }
+        
+        body.light-mode .footer-contact-btn:hover {
+            background: var(--c-orange) !important;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(255,77,0,0.2) !important;
+        }
+
+        /* 5. Borders, Badges, & Watermark */
+        body.light-mode footer .border-white\/5,
+        body.light-mode footer .border-white\/10,
+        body.light-mode footer .border-white\/20 {
+            border-color: rgba(0,0,0,0.1) !important;
+        }
+        
+        /* The "Ready to Pour" badge */
+        body.light-mode footer .bg-white\/5 {
+            background-color: rgba(255,255,255,0.8) !important;
+            border: 1px solid rgba(0,0,0,0.1) !important;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05) !important;
+        }
+
+        /* Massive background watermark */
+        body.light-mode footer .opacity-\[0\.03\] h2 {
+            color: #000 !important;
+            opacity: 0.04 !important;
+            text-shadow: none !important;
+        }
+
+        /* Ensure horizontal scroll track doesn't block video */
+        .horizontal-track {
+            background: transparent;
+        }
+
+        /* Nav & UI Utilities */
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999; pointer-events: none; opacity: 0.05;
+            filter: invert(1);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        :root {
+            --c-orange: #FF4D00;
+        }
+
+        /* ==========================================================================
+           HORIZONTAL SCROLL STYLES
+           ========================================================================== */
+        .horizontal-scroll-wrapper {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            position: relative;
+            background: #050505;
+        }
+
+        .horizontal-track {
+            display: flex;
+            flex-wrap: nowrap;
+            height: 100%;
+            padding: 0;
+            gap: 0;
+        }
+
+        /* 1. RESTORE ORIGINAL CARD SIZE (From Screenshot) */
+        .h-panel {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5vw; /* Restores the gaps on the left and right */
+            box-sizing: border-box;
+            flex-shrink: 0;
+            perspective: 1000px;
+        }
+
+        /* 2. RESTORE CARD HEIGHT & ROUNDED CORNERS */
+        .panel-content {
+            position: relative;
+            width: 100%;
+            height: 80vh; /* Restores the exact height from your screenshot */
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            background: #111;
+            transition: transform 0.4s ease, border-color 0.4s ease;
+        }
+
+        .panel-content:hover {
+            border-color: rgba(255, 77, 0, 0.5);
+        }
+
+        /* 3. FORCE IMAGES TO FIT PERFECTLY */
+        .panel-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            border-radius: 30px; /* Matches the card radius */
+        }
+
+        .panel-bg img {
+            position: absolute;
+            inset: 0;
+            width: 100% !important;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            max-width: unset;
+        }
+
+        .panel-overlay {
+            position: absolute; inset: 0; z-index: 2;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.8) 80%, rgba(0,0,0,0.95) 100%);
+        }
+
+        /* Standard Layout (Text Left, Button Right) */
+        .panel-info {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: 3rem 4rem; z-index: 3;
+            display: flex;
+            justify-content: space-between; /* Pushes text to left, button to right */
+            align-items: flex-end;
+        }
+
+        /* 3. RESTORE ORANGE BUTTON */
+        .arrow-btn {
+            width: 70px; height: 70px;
+            background-color: var(--c-orange); /* Solid Orange */
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s;
+            color: white;
+            flex-shrink: 0;
+            border: none;
+        }
+        .panel-content:hover .arrow-btn {
+            transform: rotate(-45deg) scale(1.1);
+            background-color: white;
+            color: var(--c-orange);
+        }
+
+        /* FORCE TEXT VISIBLE - NO ANIMATION HIDING */
+        .text-content h2, .text-content p {
+            transform: translateY(0) !important;
+            opacity: 1 !important;
+        }
+        
+
+        @media (max-width: 768px) {
+            .horizontal-scroll-wrapper { height: auto; display: block; }
+            .horizontal-track { flex-direction: column; height: auto; padding: 50px 20px; gap: 40px; }
+            .h-panel { width: 100%; height: 80vh; padding: 0; }
+            .panel-content { height: 100%; border-radius: 20px; } /* Slightly smaller corners for mobile */
+            .panel-info { padding: 2rem; flex-direction: column; align-items: flex-start; gap: 20px; }
+            .tunnel-big-text { font-size: 26vw; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.05); }
+            .tunnel-ring { width: 950px; height: 950px; }
+        }
+
+        /* =========================================
+           LIGHT MODE NAV CLEANUP (SOLID COLORS ONLY)
+           ========================================= */
+           
+        /* 1. Strip all shadows and borders from nav links and the logo */
+        body.light-mode .pill-link,
+        body.light-mode .nav-logo,
+        body.light-mode .nav-logo span {
+            -webkit-text-stroke: 0px !important;
+            text-shadow: none !important;
+        }
+
+        /* 2. Force standard links to be crisp solid black */
+        body.light-mode .pill-link {
+            color: #000000 !important;
+            opacity: 0.8; 
+        }
+
+        /* 3. Force the active page (and hover state) to be LA Concrete Orange */
+        body.light-mode .pill-link.active,
+        body.light-mode .pill-link:hover {
+            color: #ff4d00 !important;
+            opacity: 1;
+        }
+
+        /* ==========================================================================
+           SKINNY BOTTOM FOOTER
+           ========================================================================== */
+        .site-footer {
+            width: 100%;
+            background-color: #050505; /* Matches your index site background */
+            padding: 1rem 0; 
+            border-top: 1px solid rgba(255,255,255,0.05); 
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-copyright {
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem; 
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0; 
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-white {
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        .brand-orange {
+            color: #ff4500; /* LA Concrete Orange */
+            font-weight: 800;
+            font-size: 18px;
+        }
+
+        .footer-legal p {
+            color: #aaaaaa;
+            font-size: 14px;
+            font-weight: 500;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+
+        /* --- Light Mode Overrides --- */
+
+        body.light-mode .brand-white {
+            color: #121212; /* Turns 'LA' black so it's visible on white */
+        }
+
+        body.light-mode .footer-copyright p {
+            color: #ffffff !important; /* Ensures the trademark text stays white and readable against the black background */
+        }
+
+        /* Footer Animation Initial States */
+        .footer-anim-left, .footer-anim-card {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        /* =========================================
+           BULK UP & BOLD OVERRIDES (SIZE & VISIBILITY)
+           ========================================= */
+        
+        /* 1. Make the cards significantly taller and more substantial */
+        .footer-stat-card {
+            padding: 4rem 2rem !important; /* Increases height massively */
+            border-width: 2px !important; /* Thicker glass edge for better definition */
+        }
+
+        /* 2. Bold everything in Light Mode for maximum legibility */
+        
+        /* Massive, thick numbers */
+        body.light-mode .stat-number {
+            font-weight: 900 !important;
+            font-size: clamp(3rem, 4vw, 4.5rem) !important; /* Scales numbers up */
+        }
+
+        /* Card Labels */
+        body.light-mode .footer-stat-card span:last-child {
+            font-weight: 800 !important;
+            color: #111 !important; /* Much darker grey for contrast */
+            font-size: 0.95rem !important; /* Slightly larger */
+            letter-spacing: 0.2em !important;
+        }
+
+        /* Main Paragraph Text */
+        body.light-mode .footer-anim-left p {
+            font-weight: 700 !important;
+            color: #111 !important;
+            font-size: 1.15rem !important;
+        }
+
+        /* Bulkier Pill Button */
+        body.light-mode .footer-contact-btn {
+            font-weight: 800 !important;
+            padding: 18px 48px !important; /* Fatter button to match the bigger cards */
+            font-size: 1rem !important;
+            border-width: 2px !important; /* Thicker outline */
+        }
+
+        /* Bottom Grid Labels & Badges */
+        body.light-mode footer .text-white\/40, 
+        body.light-mode footer .text-white\/30,
+        body.light-mode footer .bg-white\/5 span {
+            font-weight: 800 !important;
+            color: #333 !important;
+        }
+
+        /* Bottom Email / Phone Links */
+        body.light-mode footer a.text-white {
+            font-weight: 900 !important;
+            font-size: 1.1rem !important;
+        }
+
+        /* =========================================
+           DISTINCT BOTTOM DOCK (DARK & LIGHT)
+           ========================================= */
+           
+        .bottom-contact-bar {
+            background: rgba(20, 20, 20, 0.4); /* Dark glass for dark mode */
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 20px;
+            padding: 24px 40px !important;
+            margin-bottom: 24px !important;
+            width: calc(100% - 48px) !important; /* Keeps it floating off the edges */
+            max-width: 1400px !important;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+
+        /* Pop the dock in Light Mode */
+        body.light-mode .bottom-contact-bar {
+            background: rgba(255, 255, 255, 0.9) !important; /* Thick white frosted glass */
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.08) !important;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="global-video-bg">
+        <img src="images/la5.png" alt="Background" style="width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0;">
+        <div class="global-film"></div>
+    </div>
+
+    <div id="loader-wrapper">
+        <div class="loader-content">
+            <div class="cursive-text">Welcome to</div>
+            <div class="brand-wrapper">
+                <span class="la-text">LA</span><span class="concrete-text">CONCRETE'S</span>
+            </div>
+            <div class="services-text">Services</div>
+        </div>
+    </div>
+
+<div class="noise"></div>
+
+    <nav id="pill-nav-container">
+        <div class="pill-nav-bar">
+            <a href="index.html" class="nav-logo">
+                LA <span style="color: #ff4d00;">CONCRETE</span>
+            </a>
+            <div class="nav-items-wrapper">
+                <a href="index.html" class="pill-link">Home</a>
+                <a href="services.html" class="pill-link active">Services</a>
+                <a href="about.html" class="pill-link">About</a>
+                <a href="contact.html" class="pill-link">Contact</a>
+            </div>
+            <a href="contact.html" class="nav-quote-btn">
+                Get Quote
+            </a>
+        </div>
+    </nav>
+
+    <button id="menuToggle" class="md:hidden fixed top-4 right-4 z-50 text-white bg-black/50 p-2 rounded" aria-label="Toggle menu">&#9776;</button>
+
+    <main>
+        <section class="services-hero">
+            <div class="hero-content-wrapper">
+                <h1 class="font-[Kanit] font-black uppercase w-full flex flex-col items-center relative">
+                    
+                    <div class="overflow-visible w-full pb-2 z-10 relative text-center">
+                        <span class="inline-block services-glow-text text-[4rem] md:text-[6.5rem] lg:text-[8.5rem] leading-none text-white">
+                            OUR
+                        </span>
+                    </div>
+                    
+                    <div class="overflow-visible w-full pt-2 z-10 relative text-center">
+                        <span class="inline-block services-glow-text text-[4rem] md:text-[6.5rem] lg:text-[8.5rem] leading-none text-concrete-orange">
+                            SERVICES
+                        </span>
+                    </div>
+
+                </h1>
+                <p class="hero-subtitle">
+                    Comprehensive concrete solutions tailored for architectural excellence. <br>
+                    From residential foundations to commercial infrastructure.
+                </p>
+            </div>
+
+            <div class="scroll-indicator">
+                <div class="mouse">
+                    <div class="wheel"></div>
+                </div>
+                <div class="arrow">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+
+        </section>
+        
+    <section id="services-3d-tunnel" class="w-full h-screen relative overflow-hidden flex items-center justify-center">
+        <div class="viewport absolute inset-0 w-full h-full pointer-events-none z-20">
+            <div class="world absolute inset-0 w-full h-full" id="world">
+                </div>
+        </div>
+    </section>
+
+<footer id="animated-footer" class="relative w-full min-h-screen pt-32 pb-12 flex flex-col justify-center overflow-hidden border-t border-white/5">
+    
+    <div class="relative z-20 w-full max-w-screen-2xl mx-auto px-6 md:px-12 lg:px-24 flex flex-col lg:flex-row items-center justify-between gap-16 mb-24 mt-auto">
+        
+        <div class="w-full lg:w-1/2 flex flex-col items-start text-left">
+            
+            <div class="footer-anim-left inline-block border border-white/20 rounded-full px-5 py-2 mb-8 backdrop-blur-sm bg-white/5">
+                <span class="font-[Outfit] text-white/80 text-xs font-semibold tracking-[0.2em] uppercase">Ready to Pour</span>
+            </div>
+
+            <h2 class="footer-anim-left font-[Kanit] font-black text-6xl md:text-8xl text-white uppercase leading-[0.9] tracking-tight mb-6">
+                BUILT TO<br>LAST.
+            </h2>
+            <p class="footer-anim-left font-[Outfit] text-white/70 text-lg max-w-md leading-relaxed mb-10">
+                Our commitment to quality ensures that every pour stands the test of time. From residential slabs to large-scale commercial infrastructure.
+            </p>
+            
+            <a href="#contact" class="footer-anim-left footer-contact-btn">
+                CONTACT US
+            </a>
+        </div>
+
+        <div class="w-full lg:w-1/2 flex flex-col gap-8">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+                <div class="footer-anim-card footer-stat-card">
+                    <span class="stat-number font-[Kanit] font-black text-4xl md:text-5xl text-white mb-2">10,000+</span>
+                    <span class="font-[Outfit] text-white/50 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase text-center">Projects Completed</span>
+                </div>
+                <div class="footer-anim-card footer-stat-card">
+                    <span class="stat-number font-[Kanit] font-black text-4xl md:text-5xl text-white mb-2">35+</span>
+                    <span class="font-[Outfit] text-white/50 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase text-center">Years Experience</span>
+                </div>
+                <div class="footer-anim-card footer-stat-card">
+                    <span class="stat-number font-[Kanit] font-black text-4xl md:text-5xl text-white mb-2">8+</span>
+                    <span class="font-[Outfit] text-white/50 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase text-center">Staff Members</span>
+                </div>
+                <div class="footer-anim-card footer-stat-card">
+                    <span class="stat-number font-[Kanit] font-black text-4xl md:text-5xl text-white mb-2">77+</span>
+                    <span class="font-[Outfit] text-white/50 text-xs md:text-sm font-semibold tracking-[0.15em] uppercase text-center">Suburbs in SA</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-8 sm:gap-16 pt-6 border-t border-white/10">
+                <div class="footer-anim-card">
+                    <span class="block font-[Outfit] text-white/40 text-[10px] font-bold tracking-[0.2em] uppercase mb-1">Email Us</span>
+                    <a href="mailto:admin@laconcrete.com.au" class="font-[Outfit] text-white hover:text-concrete-orange transition-colors text-base font-semibold tracking-wide">admin@laconcrete.com.au</a>
+                </div>
+                <div class="footer-anim-card">
+                    <span class="block font-[Outfit] text-white/40 text-[10px] font-bold tracking-[0.2em] uppercase mb-1">Call Us</span>
+                    <a href="tel:0882345678" class="font-[Outfit] text-white hover:text-concrete-orange transition-colors text-base font-semibold tracking-wide">(08) 8234 5678</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+            <footer class="site-footer">
+                <div class="footer-copyright">
+                    <p>&copy; 2024 LA Concrete. Built to Last.</p>
+                </div>
+            </footer>
+
+    </main>
+    
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        function startServicesHero() {
+            const tl = gsap.timeline();
+
+            gsap.set(".services-glow-text", {
+                autoAlpha: 0, 
+                textShadow: "0px 0px 0px rgba(255, 77, 0, 0)"
+            });
+
+            gsap.set(".hero-subtitle", {
+                autoAlpha: 0,
+                y: 20
+            });
+
+            // Smoothly fade and glow the text
+            tl.to(".services-glow-text", {
+                autoAlpha: 1, 
+                textShadow: "0px 0px 20px rgba(255, 77, 0, 0.2), 0px 0px 30px rgba(255, 255, 255, 0.1)",
+                duration: 2.5,
+                ease: "expo.out",
+                stagger: 0.2
+            })
+
+            // Subtitle gently fades in
+            .to(".hero-subtitle", {
+                autoAlpha: 1,
+                y: 0,
+                duration: 1,
+                ease: "power2.out"
+            }, "-=1.5");
+
+            return tl;
+        }
+
+        function initPageAnimations() {
+        // 1. Smooth Scroll (SYNCED WITH GSAP)
+                const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+
+                // This is the magic bridge that connects Lenis and GSAP
+                lenis.on('scroll', ScrollTrigger.update);
+
+                gsap.ticker.add((time) => {
+                    lenis.raf(time * 1000);
+                });
+
+                gsap.ticker.lagSmoothing(0);
+
+                // 2. Hero Animations
+                startServicesHero();
+
+                // C. Parallax the Hero Container on Scroll (No conflicts!)
+                gsap.to(".hero-content-wrapper", { 
+                    y: -150,      // Smoothly moves the whole text block up
+                    opacity: 0,   // Fades out the entire block together
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".services-hero",
+                        start: "top top",
+                        end: "bottom top",
+                        scrub: true
+                    }
+                });
+
+                // We also update the scroll indicator to fade out a bit faster
+                gsap.to(".scroll-indicator", {
+                    opacity: 0,
+                    y: 50,
+                    ease: "none",
+                    scrollTrigger: {
+                        trigger: ".services-hero",
+                        start: "top top",
+                        end: "20% top",
+                        scrub: true
+                    }
+                });
+
+                // =========================================================================
+                // 3. 3D HYPER SCROLL TUNNEL (IMMERSIVE)
+                // =========================================================================
+                const world = document.getElementById('world');
+                const tunnelSection = document.getElementById('services-3d-tunnel');
+
+                if (world && tunnelSection) {
+                    const servicesData = [
+                        { title: "FOUNDATIONS", desc: "Structural footings & waffle pods engineered for stability.", img: "images/la2.png" },
+                        { title: "HIGHrISES", desc: "Large-scale vertical concrete pours and suspended slabs.", img: "images/la5.png" },
+                        { title: "SHED SLABS", desc: "Heavy-duty reinforced floors for industrial workshops.", img: "images/la4.png" },
+                        { title: "COMMERCIAL", desc: "Civil works for retail parks, carparks, and office complexes.", img: "images/la5.png" },
+                        { title: "DRIVEWAYS", desc: "Premium exposed aggregate finishes that elevate curb appeal.", img: "images/la2.png" },
+                        { title: "FOOTPATHS", desc: "Public and private pedestrian paving in stipple finishes.", img: "images/la1.png" }
+                    ];
+
+                    const bgTexts = ["STRENGTH", "PRECISION", "BUILT TO LAST"];
+                    const items = [];
+
+                    // MOBILE DETECTION
+                    const isMobile = window.innerWidth < 768;
+                    
+                    // THE FIX: Dropped spacing again so they are packed in tight
+                    const zGap = isMobile ? 800 : 1100; // Was 1000 / 1500
+
+                    // 1. Generate Structural Tunnel Rings
+                    for(let i = 0; i < 30; i++) {
+                        const ring = document.createElement('div');
+                        ring.className = 'tunnel-ring';
+                        world.appendChild(ring);
+                        items.push({ el: ring, x: 0, y: 0, rot: 0, baseZ: -i * (zGap / 3), type: 'ring' });
+                    }
+
+                    // 2. Generate Data Elements (Cards & Text)
+                    servicesData.forEach((data, i) => {
+                        // Giant Background Text 
+                        if (i % 2 === 0) {
+                            const textEl = document.createElement('div');
+                            textEl.className = 'tunnel-item tunnel-big-text';
+                            textEl.innerText = bgTexts[(i / 2) % bgTexts.length];
+                            world.appendChild(textEl);
+                            items.push({ el: textEl, x: 0, y: 0, rot: (Math.random() - 0.5) * 8, baseZ: -(i * zGap) - (zGap / 2), type: 'text' });
+                        }
+
+                        // Service Card
+                        const cardWrapper = document.createElement('div');
+                        cardWrapper.className = 'tunnel-item pointer-events-none';
+                        
+                        const isLeft = i % 2 === 0;
+                        cardWrapper.innerHTML = `
+                            <div class="tunnel-card">
+                                <img src="${data.img}" alt="${data.title}">
+                                <div class="tunnel-overlay"></div>
+                                <div class="tunnel-info">
+                                    <div class="tunnel-text-content">
+                                        <span style="color: #ff4d00; font-family: 'Outfit'; font-weight: 800; letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">0${i+1} // SERVICE</span>
+                                        <h2 style="font-family: 'Kanit'; font-weight: 900; color: white; line-height: 0.95; margin-bottom: 0.3rem; text-transform: uppercase;">${data.title}</h2>
+                                        <p style="font-family: 'Outfit'; color: rgba(255,255,255,0.85);">${data.desc}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        world.appendChild(cardWrapper);
+
+                        // Responsive math: tighter tunnel on mobile, significantly wider on desktop to accommodate massive cards.
+                        const xBaseOffset = isMobile ? 120 : 700;
+                        const xOffset = isLeft ? -xBaseOffset : xBaseOffset;
+                        const yOffset = (Math.random() - 0.5) * (isMobile ? 40 : 80);
+                        const rotY = isLeft ? (isMobile ? 15 : 25) : (isMobile ? -15 : -25);
+                        const rotZ = isLeft ? -2 : 2;
+
+                        items.push({ el: cardWrapper, x: xOffset, y: yOffset, rotZ: rotZ, rotY: rotY, baseZ: -i * zGap, type: 'card' });
+                    });
+
+                    // 4. Map GSAP Scroll to 3D Camera Movement
+                    let targetCameraZ = 0;
+                    const maxDistance = (servicesData.length - 1) * zGap;
+
+                    ScrollTrigger.create({
+                        trigger: tunnelSection,
+                        start: "top top",
+                        end: "+=4500",
+                        pin: true,
+                        scrub: 1,
+                        onUpdate: (self) => {
+                            targetCameraZ = self.progress * maxDistance;
+                        }
+                    });
+
+                    // 5. Render Loop
+                    let currentCameraZ = 0;
+                    gsap.ticker.add(() => {
+                        currentCameraZ += (targetCameraZ - currentCameraZ) * 0.1;
+
+                        items.forEach((item) => {
+                            const relZ = item.baseZ + currentCameraZ;
+
+                            let opacity = 1;
+                            if (relZ > 400) opacity = 0;
+                            else if (relZ > 0) opacity = 1 - (relZ / 400);
+                            else if (relZ < -4500) opacity = 0;
+                            else if (relZ < -2500) opacity = (relZ + 4500) / 2000;
+
+                            item.el.style.opacity = opacity;
+
+                            if (opacity > 0) {
+                                let currentX = item.x;
+                                let currentY = item.y;
+                                let currentRotY = item.rotY || 0;
+                                let currentRotZ = item.rotZ || 0;
+
+                                if (item.type === 'card') {
+                                    let sweepProgress = Math.max(0, Math.min(1, (relZ + 2500) / 2500));
+                                    let ease = sweepProgress * (2 - sweepProgress);
+
+                                    currentX = item.x * (1 - ease);
+                                    currentY = item.y * (1 - ease);
+                                    currentRotY = item.rotY * (1 - ease);
+                                    currentRotZ = item.rotZ * (1 - ease);
+                                }
+
+                                let transform = `translate3d(${currentX}px, ${currentY}px, ${relZ}px)`;
+
+                                if (item.type === 'card') {
+                                    transform += ` rotateY(${currentRotY}deg) rotateZ(${currentRotZ}deg)`;
+                                } else if (item.type === 'text') {
+                                    transform += ` rotateZ(${item.rot}deg)`;
+                                }
+
+                                item.el.style.transform = transform;
+                            }
+                        });
+                    });
+                }
+
+                // =========================================================================
+                // 4. FOOTER ANIMATIONS (RAPID SYNCED FADE)
+                // =========================================================================
+                const footerTl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: "#animated-footer",
+                        start: "top 80%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
+
+                // Lightning fast, perfectly synced materialization
+                footerTl.fromTo(".footer-anim-left, .footer-anim-card",
+                    { 
+                        scale: 1.05,
+                        y: 20,
+                        autoAlpha: 0,
+                        filter: "blur(10px) brightness(150%)"
+                    }, 
+                    { 
+                        scale: 1,
+                        y: 0,
+                        autoAlpha: 1,
+                        filter: "blur(0px) brightness(100%)",
+                        duration: 0.5,
+                        ease: "power2.out",
+                        stagger: 0
+                    },
+                    0
+                );
+
+                // 4. Mobile Menu Logic
+                const menuToggle = document.getElementById('menuToggle');
+                const mobileMenu = document.getElementById('mobileMenu');
+                if (menuToggle && mobileMenu) {
+                    menuToggle.addEventListener('click', () => {
+                        if (mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.remove('hidden');
+                            mobileMenu.classList.add('flex');
+                        } else {
+                            mobileMenu.classList.add('hidden');
+                            mobileMenu.classList.remove('flex');
+                        }
+                    });
+                }
+
+                // Nav Link Hovers
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('mousemove', (e) => {
+                        const r = link.getBoundingClientRect();
+                        gsap.to(link, {
+                            x: (e.clientX - r.left - r.width / 2) * 0.15,
+                            y: (e.clientY - r.top - r.height / 2) * 0.15,
+                            scale: 1.05,
+                            duration: 0.3,
+                            ease: 'power2.out'
+                        });
+                    });
+
+                    link.addEventListener('mouseleave', () => {
+                        gsap.to(link, { x: 0, y: 0, scale: 1, duration: 0.3, ease: 'power2.out' });
+                    });
+                });
+
+                // Scrolled Border
+                const nav = document.querySelector('nav');
+                if (nav) {
+                    const handleNavScroll = () => {
+                        if (window.scrollY > 50) {
+                            nav.classList.add('scrolled');
+                        } else {
+                            nav.classList.remove('scrolled');
+                        }
+                    };
+
+                    window.addEventListener('scroll', handleNavScroll);
+                    handleNavScroll();
+                }
+
+                // Logo Magnetic Hover
+                const logo = document.querySelector('.logo');
+                if (logo) {
+                    logo.addEventListener('mousemove', (e) => {
+                        const r = logo.getBoundingClientRect();
+                        gsap.to(logo, {
+                            x: (e.clientX - r.left - r.width / 2) * 0.1,
+                            y: (e.clientY - r.top - r.height / 2) * 0.1,
+                            scale: 1.03,
+                            duration: 0.3,
+                            ease: 'power2.out'
+                        });
+                    });
+
+                    logo.addEventListener('mouseleave', () => {
+                        gsap.to(logo, { x: 0, y: 0, scale: 1, duration: 0.3, ease: 'power2.out' });
+                    });
+                }
+        }
+
+        /* --- LOADER LOGIC (3 SECOND TIMER) --- */
+        window.addEventListener("load", function () {
+            const loader = document.getElementById("loader-wrapper");
+            
+            // Wait 3 seconds
+            setTimeout(function() {
+                loader.classList.add("loader-hidden");
+
+                loader.addEventListener("transitionend", function() {
+                    if (loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                    if (typeof initPageAnimations === "function") {
+                        initPageAnimations();
+                    }
+                });
+            }, 3000); 
+        });
+
+    </script>
+</body>
+</html>
+

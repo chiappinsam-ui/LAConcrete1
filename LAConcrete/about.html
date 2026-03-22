@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L.A CONCRETE | ABOUT ANTHONY</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'concrete-orange': '#FF4D00',
+              'concrete-bg': '#050505',
+            }
+          }
+        }
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* UPDATED PRELOADER CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Dancing+Script:wght@600&display=swap');
+
+        #loader-wrapper {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f2f2f2;
+            z-index: 20000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loader-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* 1. START INVISIBLE */
+            opacity: 0;
+            /* 2. FADE IN ANIMATION (0.8s) */
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* "Welcome to" Cursive Styling */
+        .cursive-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            color: #000000;
+            margin-bottom: -10px;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.8s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        .brand-wrapper {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 8rem;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            animation: simpleFade 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+        }
+
+        .la-text {
+            color: #000000;
+            margin-right: 2px;
+        }
+
+        .concrete-text {
+            color: #000000;
+            animation: lightUp 0.3s ease-out forwards;
+            animation-delay: 1.2s; /* Waits for fade-in to finish before lighting up */
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes simpleFade {
+            to { opacity: 1; }
+        }
+
+        @keyframes lightUp {
+            0% { color: #000000; text-shadow: none; }
+            30% { color: #802600; text-shadow: none; } /* Flicker dark */
+            60% { color: #000000; text-shadow: none; } /* Flicker off */
+            100% { 
+                color: #ff4d00; 
+                text-shadow: 0 0 20px rgba(255, 77, 0, 0.4); /* Glow */
+            }
+        }
+
+        .loader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .brand-wrapper { font-size: 15vw; }
+            .cursive-text { font-size: 8vw; }
+        }
+        body {
+            background-color: #050505;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+        }
+        /* ==========================================================================
+           LIFTED PILL NAV (Matches Site)
+           ========================================================================== */
+        #pill-nav-container {
+            position: fixed;
+            top: 0.5rem;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+        .pill-nav-bar {
+            pointer-events: auto;
+            background: #000000;
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .nav-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .nav-items-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pill-link {
+            padding: 0.5rem 1rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        .pill-link:hover, .pill-link.active {
+            color: #ff4d00;
+        }
+        .nav-quote-btn {
+            background: white;
+            color: black;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .nav-quote-btn:hover {
+            background: #ff4d00;
+            color: white;
+        }
+        @media (max-width: 900px) {
+            #pill-nav-container { display: none; }
+        }
+
+        /* ==========================================================================
+           SKINNY BOTTOM FOOTER (Matches Site)
+           ========================================================================== */
+        .site-footer {
+            width: 100%;
+            background-color: #050505;
+            padding: 1rem 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 10;
+        }
+        .footer-copyright {
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        /* ==========================================================================
+           FIXED HERO TEXT OUTLINE
+           ========================================================================== */
+        .text-outline-thick {
+            -webkit-text-stroke: 2px rgba(255, 255, 255, 0.7); /* Thicker, brighter outline */
+            color: transparent;
+        }
+
+        /* ==========================================================================
+           MAKE SECTIONS TRANSPARENT FOR GLOBAL BACKGROUND
+           ========================================================================== */
+        body, main, section {
+            background: transparent !important;
+            background-color: transparent !important;
+        }
+        .hero-card-gradient {
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 40%, rgba(0,0,0,0) 100%);
+        }
+    </style>
+</head>
+<body>
+    <div id="global-image-bg" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; overflow: hidden;">
+        <img src="images/la1.png" alt="Background" style="width: 100%; height: 100%; object-fit: cover;">
+        <div style="position: absolute; inset: 0; width: 100%; height: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0.6) 0%, rgba(5,5,5,0.85) 50%, rgba(5,5,5,0.95) 100%);"></div>
+    </div>
+
+    <div id="loader-wrapper">
+        <div class="loader-content">
+            <div class="cursive-text">About</div>
+            <div class="brand-wrapper">
+                <span class="la-text">LA</span><span class="concrete-text">CONCRETE</span>
+            </div>
+        </div>
+    </div>
+
+<nav id="pill-nav-container">
+    <div class="pill-nav-bar">
+        
+        <a href="index.html" class="nav-logo">
+            LA <span style="color: #ff4d00;">CONCRETE</span>
+        </a>
+
+        <div class="nav-items-wrapper">
+            <a href="index.html" class="pill-link">Home</a>
+            <a href="services.html" class="pill-link">Services</a>
+            <a href="about.html" class="pill-link active">About</a>
+            <a href="contact.html" class="pill-link">Contact</a>
+        </div>
+
+        <a href="contact.html" class="nav-quote-btn">
+            Get Quote
+        </a>
+        
+    </div>
+</nav>
+
+    <main>
+        <section class="relative min-h-screen w-full flex flex-col justify-center items-center pt-24 pb-12 px-6 overflow-hidden">
+            <div class="relative z-10 w-full max-w-6xl mx-auto flex flex-col items-center text-center -mt-16">
+                
+                <div class="mb-6 animate-fade-in border border-white/20 rounded-full px-6 py-2 backdrop-blur-sm bg-white/5">
+                    <span class="text-white/70 font-[Outfit] font-semibold tracking-[0.4em] uppercase text-xs">Est. 1991</span>
+                </div>
+                
+                <h1 class="font-[Kanit] font-black uppercase w-full flex flex-col items-center">
+                    
+                    <div class="overflow-hidden w-full pb-2 relative">
+                        <div class="light-beam absolute top-0 -left-[100%] w-[60%] h-full bg-gradient-to-r from-transparent via-white to-transparent opacity-0 -skew-x-[30deg] blur-[10px] z-20 pointer-events-none mix-blend-overlay"></div>
+                        <span class="block translate-y-[110%] hero-text text-[3.5rem] md:text-[6.5rem] lg:text-[8.5rem] leading-none text-white">
+                            ABOUT
+                        </span>
+                    </div>
+
+                    <div class="overflow-hidden w-full pt-2 relative">
+                        <div class="light-beam absolute top-0 -left-[100%] w-[60%] h-full bg-gradient-to-r from-transparent via-concrete-orange to-transparent opacity-0 -skew-x-[30deg] blur-[10px] z-20 pointer-events-none mix-blend-overlay"></div>
+                        
+                        <span class="block translate-y-[110%] hero-text text-[3.5rem] md:text-[6.5rem] lg:text-[8.5rem] leading-none text-white">
+                            LA <span class="text-concrete-orange">CONCRETE</span>
+                        </span>
+                    </div>
+
+                </h1>
+
+                <div class="hero-sub opacity-0 transform translate-y-10 mt-8">
+                    <p class="font-[Outfit] text-white/70 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-light">
+                        Anthony Di Rubbo has been concreting for over <strong class="text-white font-medium">35 years</strong>. Driven by a commitment to perfection, we strive to earn our place as your first choice for all concrete needs.
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-0 animate-[fadeIn_2s_ease_2s_forwards]">
+                <span class="font-[Outfit] text-[10px] tracking-[0.3em] uppercase text-white/50">Scroll</span>
+                <div class="animate-bounce mt-1">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <section class="relative py-24 md:py-32 border-t border-white/10 overflow-hidden">
+            <div class="w-full max-w-[95%] mx-auto px-4 flex flex-col items-center text-center">
+                
+                <div class="w-full mb-10">
+                    <h2 class="font-[Kanit] font-bold text-5xl md:text-6xl uppercase text-white mb-6 leading-[0.85]">
+                        The Experience<br><span class="text-concrete-orange">Difference.</span>
+                    </h2>
+                    <div class="w-24 h-1.5 bg-concrete-orange mx-auto rounded-full"></div>
+                </div>
+
+                <div class="space-y-5 text-base md:text-lg text-white/80 font-[Outfit] font-light leading-relaxed max-w-4xl mx-auto">
+                    
+                    <p class="text-white text-xl">
+                        Welcome to L.A Concrete - Your Trusted Partners in Quality Construction.
+                    </p>
+
+                    <p>
+                        Established with a singular vision, L.A Concrete was born from the collaboration of seasoned industry professionals who wanted to raise the standard of service in the Australian construction industry.
+                    </p>
+
+                    <p>
+                        At L.A Concrete, we are driven by a steadfast commitment to <strong class="text-white font-normal">honesty, hard work, and customer satisfaction</strong>. We strive to earn our place as your first choice for all concrete needs. Our friendly and dedicated team is here to assist you every step of the way, ensuring that your project vision becomes a tangible reality.
+                    </p>
+
+                    <p>
+                        Anthony Di Rubbo has personally overseen the completion of more than <strong class="text-white font-normal">50,000 jobs</strong> over his extensive 35-year career. From complex commercial infrastructure to bespoke residential driveways, our team brings a wealth of knowledge and expertise to every project we undertake.
+                    </p>
+
+                    <p>
+                        Our extensive list of services includes everything from concrete installation and finishing, to intricate repairs and maintenance. We understand that every project is unique, which is why we take the time to listen to your needs and customize a solution that fits your budget and timeline.
+                    </p>
+                    
+                    <div class="pt-8">
+                        <p class="font-[Kanit] font-bold text-4xl text-white italic tracking-tighter mb-2">"My word is my bond."</p>
+                        <p class="text-concrete-orange text-sm uppercase tracking-[0.2em] font-bold">- Anthony Di Rubbo</p>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
+
+        <section class="relative py-20 bg-[#050505] border-t border-white/5 flex flex-col items-center text-center">
+            <h2 class="font-[Kanit] font-bold text-3xl md:text-4xl text-white mb-6 uppercase">Ready to start your project?</h2>
+            <a href="contact.html" class="inline-block bg-white text-black font-[Kanit] font-bold uppercase text-sm tracking-widest px-10 py-4 rounded-full hover:bg-concrete-orange hover:text-white transition-all duration-300">
+                Contact Us Today
+            </a>
+        </section>
+
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-copyright">
+            <p>&copy; 2026 LA Concrete. Built to Last.</p>
+        </div>
+    </footer>
+
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- HERO & STORY ANIMATIONS ---
+        function startHeroAnimations() {
+            const tl = gsap.timeline();
+            
+            // Set an initial glowing shadow on the text
+            gsap.set(".hero-text", { 
+                textShadow: "0px 20px 40px rgba(255,255,255,0.6)" 
+            });
+
+            // 1. Slide text up and remove the glow so it "solidifies"
+            tl.to(".hero-text", { 
+                y: 0, 
+                textShadow: "0px 0px 0px rgba(255,255,255,0)",
+                duration: 1.5, 
+                ease: "power4.out", 
+                stagger: 0.15 
+            })
+            // 2. Shoot the light beams across the text at the same time
+            .to(".light-beam", {
+                left: "150%", 
+                opacity: 0.7,
+                duration: 1.2,
+                ease: "power2.inOut",
+                stagger: 0.15
+            }, "-=1.3") 
+            // 3. Fade in the subtext
+            .to(".hero-sub", { 
+                opacity: 1, 
+                y: 0, 
+                duration: 0.8 
+            }, "-=0.6");
+
+            gsap.from(".reveal-item", {
+                scrollTrigger: {
+                    trigger: ".story-content",
+                    start: "top 85%",
+                },
+                y: 30,
+                opacity: 0,
+                stagger: 0.2,
+                duration: 1
+            });
+        }
+
+        function initPageAnimations() {
+            startHeroAnimations();
+        }
+
+        /* --- LOADER LOGIC (3 SECOND TIMER) --- */
+        window.addEventListener("load", function () {
+            const loader = document.getElementById("loader-wrapper");
+            
+            // Wait 3 seconds
+            setTimeout(function() {
+                loader.classList.add("loader-hidden");
+
+                loader.addEventListener("transitionend", function() {
+                    if (loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                    if (typeof initPageAnimations === "function") {
+                        initPageAnimations();
+                    }
+                });
+            }, 3000); 
+        });
+
+        // Lenis Smooth Scroll (SYNCED WITH GSAP)
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((time) => { lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+    </script>
+</body>
+</html>

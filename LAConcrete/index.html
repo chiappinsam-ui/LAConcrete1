@@ -1,0 +1,1291 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L.A CONCRETE | ARCHITECTURAL FINISHES</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'concrete-orange': '#FF4D00',
+              'concrete-bg': '#F0F0F0',
+            }
+          }
+        }
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;700;900&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* UPDATED PRELOADER CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Great+Vibes&display=swap');
+
+        #loader-wrapper {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f2f2f2;
+            z-index: 20000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loader-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* 1. START INVISIBLE */
+            opacity: 0;
+            /* 2. FADE IN ANIMATION (0.8s) */
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* "Welcome to" Cursive Styling */
+        .cursive-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            color: #000000;
+            margin-bottom: -10px;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.8s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        .brand-wrapper {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 8rem;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            animation: simpleFade 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+        }
+
+        .la-text {
+            color: #000000;
+            margin-right: 2px;
+        }
+
+        .concrete-text {
+            color: #000000;
+            animation: lightUp 0.3s ease-out forwards;
+            animation-delay: 1.2s; /* Waits for fade-in to finish before lighting up */
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes simpleFade {
+            to { opacity: 1; }
+        }
+
+        @keyframes lightUp {
+            0% { color: #000000; text-shadow: none; }
+            30% { color: #802600; text-shadow: none; } /* Flicker dark */
+            60% { color: #000000; text-shadow: none; } /* Flicker off */
+            100% { 
+                color: #ff4d00; 
+                text-shadow: 0 0 20px rgba(255, 77, 0, 0.4); /* Glow */
+            }
+        }
+
+        .loader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .brand-wrapper { font-size: 15vw; }
+            .cursive-text { font-size: 8vw; }
+        }
+
+        /* ==========================================================================
+           CORE STYLES
+           ========================================================================== */
+        :root {
+            --c-orange: #FF4D00;
+            --c-bg: #050505;      
+            --c-text: #ffffff;    
+            --f-body: 'Outfit', sans-serif;
+            --f-heading: 'Kanit', sans-serif;
+        }
+
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        html.lenis { height: auto; } 
+        .lenis.lenis-smooth { scroll-behavior: auto; }
+        
+        body {
+            background-color: var(--c-bg);
+            color: var(--c-text);
+            font-family: var(--f-body);
+            margin: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        .hero-content { 
+            position: absolute;
+            inset: 0;
+            z-index: 10; 
+            text-align: center;
+        }
+
+        h1 {
+            font-family: 'Kanit', sans-serif !important; 
+            font-weight: 900 !important;
+            font-size: clamp(2.5rem, 7vw, 8rem) !important; 
+            line-height: 1 !important;
+            text-transform: uppercase !important;
+            text-align: center;
+            width: 100%;
+            margin: 0 auto;
+            color: white;
+            -webkit-text-stroke: 2px black;
+            paint-order: stroke fill;
+            -webkit-font-smoothing: antialiased;
+            filter: drop-shadow(0px 10px 30px rgba(0,0,0,0.3));
+        }
+
+        .h1-reveal {
+            display: inline-block;
+            will-change: transform, opacity;
+        }
+
+        /* Noise Overlay */
+        .noise {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 9999; pointer-events: none; opacity: 0.05;
+            filter: invert(1);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        /* ==========================================================================
+           LIFTED PILL NAV
+           ========================================================================== */
+        #pill-nav-container {
+            position: fixed;
+            /* Moved from 1.5rem to 0.5rem to sit higher up */
+            top: 0.5rem;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+
+        .pill-nav-bar {
+            pointer-events: auto;
+            background: #000000;
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 2rem; /* Clean spacing */
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        /* Logo */
+        .nav-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        /* Links Container */
+        .nav-items-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* The Links */
+        .pill-link {
+            padding: 0.5rem 1rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7); /* Slightly muted by default */
+            transition: color 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+
+        /* Simple Orange Hover */
+        .pill-link:hover, .pill-link.active {
+            color: #ff4d00; /* Concrete Orange */
+        }
+
+        /* CTA Button */
+        .nav-quote-btn {
+            background: white;
+            color: black;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-quote-btn:hover {
+            background: #ff4d00;
+            color: white;
+        }
+
+        /* Mobile Hide */
+        @media (max-width: 900px) {
+            #pill-nav-container { display: none; }
+        }
+
+        /* Buttons */
+        .mag-btn {
+            display: inline-block; padding: 1.5rem 3rem; border: 1px solid var(--c-text);
+            border-radius: 100px; text-transform: uppercase; letter-spacing: 2px;
+            font-size: 0.75rem; font-weight: 800; position: relative; overflow: hidden;
+            color: var(--c-text); text-decoration: none; cursor: pointer;
+            transition: color 0.4s;
+        }
+        .mag-btn .inner { position: relative; z-index: 2; }
+        .mag-btn::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--c-orange); transform: translateY(100%);
+            transition: transform 0.4s var(--ease); z-index: 1;
+        }
+        .mag-btn:hover { color: var(--c-bg); border-color: var(--c-orange); }
+        .mag-btn:hover::before { transform: translateY(0); }
+
+        /* Hero */
+        .hero {
+            height: 100vh; width: 100%; position: relative; overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+        }
+        
+        /* ==========================================================================
+           VIDEO HERO STYLES (3-Card Layout)
+           ========================================================================== */
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; 
+            width: 100%; height: 120%;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            background-color: #050505;
+        }
+
+        .video-card {
+            position: relative;
+            width: 100%; height: 100%;
+            border-radius: 20px; 
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1); 
+            background: #000; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .video-card video {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .v-overlay {
+            position: absolute; inset: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 2;
+        }
+
+        @media (max-width: 768px) {
+            .hero-bg { gap: 10px; padding: 10px; }
+            .video-card { border-radius: 10px; }
+        }
+
+        /* ==========================================================================
+           SCROLL ARROW & CURSOR
+           ========================================================================== */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            opacity: 0.8;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-indicator svg {
+            width: 50px;
+            height: 50px;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .cursor {
+            display: inline-block;
+            font-weight: 100;
+            color: var(--c-orange);
+            margin-left: 10px;
+            -webkit-text-stroke: 0px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink { 
+            0%, 100% { opacity: 1; } 
+            50% { opacity: 0; } 
+        }
+
+        /* Intro Section */
+        .content-transition { 
+            background: var(--c-bg); 
+            position: relative; 
+            z-index: 5; 
+        }
+
+        /* ==========================================================================
+           HORIZONTAL SCROLL SECTION (FIXED: Full Screen Cards)
+           ========================================================================== */
+        .horizontal-scroll-wrapper {
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            position: relative;
+            background: #050505;
+        }
+
+        .horizontal-track {
+            display: flex;
+            flex-wrap: nowrap;
+            height: 100%;
+            /* 1. We remove gap here and use width to separate them */
+            gap: 0; 
+            position: relative;
+            z-index: 1;
+            padding: 0; /* Remove padding so first card is centered */
+            align-items: center; 
+        }
+
+        .h-panel {
+            /* 2. MAKE THIS 100vw. This forces neighbors off screen */
+            width: 100vw;   
+            height: 100vh; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* 3. This padding creates the visual "gap" inside the viewport */
+            padding: 0 5vw; 
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        /* The Card Container */
+        .panel-content {
+            position: relative;
+            width: 100%;
+            /* 4. Taller height to fit screen better */
+            height: 85vh; 
+            border-radius: 25px; 
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+            isolation: isolate;
+        }
+
+        /* Background */
+        .panel-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .panel-bg img, 
+        .panel-bg video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s ease;
+        }
+
+        .panel-content:hover .panel-bg img,
+        .panel-content:hover .panel-bg video {
+            transform: scale(1.05);
+        }
+
+        /* Gradient Overlay */
+        .panel-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            background: linear-gradient(
+                to bottom, 
+                rgba(0,0,0,0) 0%, 
+                rgba(0,0,0,0.1) 40%, 
+                rgba(0,0,0,0.9) 100%
+            );
+        }
+
+        /* Text Content - Adjusted to not be too huge */
+        .panel-text {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 3rem;
+            z-index: 3;
+        }
+
+        .panel-text h3 {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(3rem, 6vw, 7rem); 
+            line-height: 0.9;
+            color: white;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+            -webkit-text-stroke: 0;
+        }
+
+        .panel-text h3 span {
+            color: var(--c-orange);
+        }
+
+        .panel-text p {
+            font-family: var(--f-body);
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+            max-width: 500px;
+            line-height: 1.4;
+        }
+        /* The Big Number - Moved slightly to fit better */
+        .panel-number {
+            position: absolute;
+            top: 1.5rem;
+            right: 2rem;
+            z-index: 3;
+            font-family: var(--f-heading);
+            font-size: clamp(4rem, 6vw, 6rem);
+            line-height: 1;
+            font-weight: 900;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(255,255,255,0.4);
+            opacity: 0.5;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .horizontal-track { flex-direction: column; height: auto; padding-left: 5vw; padding-right: 5vw; }
+            .h-panel { width: 100%; height: 60vh; padding: 0 1vw; margin-bottom: 20px; }
+            .panel-content { height: 100%; }
+            .panel-text { padding: 1.5rem; }
+            .panel-number { top: 1rem; right: 1rem; }
+        }
+
+        /* ==========================================================================
+           FINAL FIXED FILM & SECTION
+           ========================================================================== */
+        .parallax-extension {
+            position: relative;
+            width: 100%;
+            /* Removed min-height: 100vh; so it doesn't force a full-screen height */
+            height: auto;
+            background-color: #000;
+            background-image: url('images/la1.png');
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed; 
+            padding: 4rem 0; /* Slightly adjusted padding for breathing room */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ==========================================================================
+           UPDATED: LIGHTER FILM & TEXT STYLES
+           ========================================================================== */
+
+        /* 1. LIGHTER FILM OVERLAY */
+        .extension-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 200%; /* Keeps the extended height */
+
+            /* SMOOTHER, LIGHTER GRADIENT */
+            background: linear-gradient(
+                to bottom,
+                rgba(0, 0, 0, 0.3) 0%,    /* Much clearer at top */
+                rgba(0, 0, 0, 0.6) 30%,   /* Subtle tint in middle */
+                rgba(0, 0, 0, 0.85) 80%   /* Deep charcoal at bottom, NOT solid pitch black */
+            );
+
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* 2. "TALK TO ANTHONY" TEXT STYLE */
+        .anthony-text {
+            color: #ffffff; /* White Fill */
+            -webkit-text-stroke: 2px #000000; /* Black Outline */
+            paint-order: stroke fill; /* Ensures letters stay crisp */
+            font-weight: 900;
+            /* Optional: A subtle shadow to lift it off the dark background */
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .extension-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 92%;
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem; /* Reduced from 2rem to pull rows closer */
+        }
+
+        /* --- ROW LAYOUTS --- */
+        .content-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem; /* Reduced gap between Text and Content */
+            width: 100%;
+        }
+
+        .ext-left, .footer-left { width: 45%; color: white; }
+        .stats-container, .footer-right { width: 50%; }
+
+        /* --- TYPOGRAPHY (Scaled Down slightly to fit) --- */
+        .ext-left h2, .footer-left h2 {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 900;
+            /* Reduced max-size from 6rem to 4.5rem so it doesn't eat the screen */
+            font-size: clamp(2.5rem, 4vw, 4.5rem);
+            line-height: 0.95;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .ext-left p, .footer-left p {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 300;
+            color: rgba(255,255,255,0.8);
+            max-width: 500px;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        /* --- COMPACT STATS GRID --- */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem; /* Tighter grid */
+        }
+
+        .stat-box {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            /* Much smaller padding to make cards shorter */
+            padding: 1.5rem 1rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-box:hover { transform: translateY(-3px); border-color: rgba(255,255,255,0.5); }
+        .stat-box .number { font-family: 'Kanit', sans-serif; font-size: 2.5rem; font-weight: 700; color: white; margin-bottom: 0.25rem; line-height: 1; }
+        .stat-box .label { font-family: 'Outfit', sans-serif; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.6); }
+
+        /* --- COMPACT FORM --- */
+        .architectural-form { display: flex; flex-direction: column; gap: 1rem; }
+        .input-row { display: flex; gap: 1rem; width: 100%; }
+        .input-wrap { width: 100%; }
+
+        .architectural-form input, .architectural-form textarea {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            /* Less padding inside inputs */
+            padding: 0.75rem 0;
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.95rem;
+            outline: none;
+            border-radius: 0;
+        }
+        .architectural-form input:focus, .architectural-form textarea:focus { border-bottom-color: #ff4d00; }
+
+        .footer-btn {
+            width: 100%;
+            background: white;
+            color: black;
+            border: none;
+            padding: 1rem 0;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .footer-btn:hover { background: #ff4d00; color: white; }
+
+        /* Divider */
+        .divider-line { width: 100%; height: 1px; background: rgba(255,255,255,0.1); margin: 1rem 0; }
+
+        /* Details */
+        .contact-details { display: flex; flex-direction: row; gap: 2rem; }
+        .detail-box .label { display: block; color: #ff4d00; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 2px; }
+        .detail-box .val { color: white; font-size: 1.2rem; text-decoration: none; font-family: 'Outfit', sans-serif; }
+
+        /* ==========================================================================
+           SKINNY BOTTOM FOOTER
+           ========================================================================== */
+        .site-footer {
+            width: 100%;
+            background-color: #050505; /* Matches your site background */
+            padding: 1rem 0; /* Keeps it tight and skinny */
+            border-top: 1px solid rgba(255,255,255,0.05); /* Subtle separator line */
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-copyright {
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem; /* Slightly smaller for a sleek look */
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0; /* Removes the old bulky margin */
+        }
+
+        /* ==========================================================================
+           RESPONSIVE FIT
+           ========================================================================== */
+        @media (max-width: 1024px) {
+            .content-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 2rem;
+            }
+            .ext-left, .footer-left, .stats-container, .footer-right {
+                width: 100%;
+            }
+            .contact-details { flex-direction: column; gap: 1rem; }
+        }
+
+        @media (max-width: 768px) {
+            .parallax-extension {
+                background-attachment: scroll; /* Smoother scrolling on mobile */
+                padding: 4rem 0;
+            }
+            .ext-left h2, .footer-left h2 { font-size: 3rem; }
+            .input-row { flex-direction: column; gap: 1rem; }
+        }
+
+        /* Mobile Fixes */
+        @media (max-width: 1000px) {
+            .horizontal-scroll-wrapper { height: auto; display: block; }
+            .horizontal-track { flex-direction: column; height: auto; padding-left: 5vw; padding-right: 5vw; gap: 40px; }
+            .h-panel { width: 100%; height: 80vh; padding: 0; border-right: none; }
+            .panel-content { height: 100%; }
+        }
+
+    </style>
+</head>
+<body>
+    <div id="loader-wrapper">
+        <div class="loader-content">
+            <div class="cursive-text">Welcome to</div>
+            <div class="brand-wrapper">
+                <span class="la-text">LA</span><span class="concrete-text">CONCRETE</span>
+            </div>
+        </div>
+    </div>
+
+<div class="noise"></div>
+<nav id="pill-nav-container">
+    <div class="pill-nav-bar">
+        
+        <a href="index.html" class="nav-logo">
+            LA <span style="color: #ff4d00;">CONCRETE</span>
+        </a>
+
+        <div class="nav-items-wrapper">
+            <a href="index.html" class="pill-link active">Home</a>
+            <a href="services.html" class="pill-link">Services</a>
+            <a href="about.html" class="pill-link">About</a>
+            <a href="contact.html" class="pill-link">Contact</a>
+        </div>
+
+        <a href="contact.html" class="nav-quote-btn">
+            Get Quote
+        </a>
+
+    </div>
+</nav>
+
+
+
+    <main id="main">
+        <section class="hero">
+            <div class="hero-bg">
+                
+                <div class="video-card">
+                    <div class="v-overlay"></div>
+                    <video autoplay loop muted playsinline>
+                        <source src="images/lavid2.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="video-card">
+                    <div class="v-overlay"></div>
+                    <video autoplay loop muted playsinline>
+                        <source src="images/lavid3.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+                <div class="video-card">
+                    <div class="v-overlay"></div>
+                    <video autoplay loop muted playsinline>
+                        <source src="images/lavid4.mp4" type="video/mp4">
+                    </video>
+                </div>
+
+            </div>
+
+            <div class="hero-content">
+                <div class="absolute inset-0 flex flex-col items-center justify-center w-full px-8 z-20 h1-reveal">
+                    <h2 class="font-[Kanit] font-black uppercase text-white text-5xl md:text-7xl lg:text-[6.5vw] text-center leading-[1.1] drop-shadow-[0_5px_15px_rgba(0,0,0,0.8)]">
+                        <span id="typing-text" class="typing-text"></span><span class="text-concrete-orange animate-pulse">|</span>
+                    </h2>
+                </div>
+                
+                <div class="scroll-indicator">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M7 13l5 5 5-5M7 6l5 5 5-5"/>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <div class="content-transition">
+            
+            <section class="horizontal-scroll-wrapper">
+                <div class="horizontal-track">
+                    
+                    <div class="h-panel">
+                        <div class="panel-content">
+                            <div class="panel-bg">
+                                <img src="images/la2.png" alt="Site Prep">
+                            </div>
+                            <div class="panel-overlay"></div>
+                            <div class="panel-number">01</div>
+                            <div class="panel-text">
+                                <h3>Site <span class="text-concrete-orange">Prep</span></h3>
+                                <p>Detailed excavation, soil removal, and laser leveling ensuring the perfect foundation grade before we pour.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="h-panel">
+                        <div class="panel-content">
+                            <div class="panel-bg">
+                                <img src="images/la5.png" alt="Reinforcement">
+                            </div>
+                            <div class="panel-overlay"></div>
+                            <div class="panel-number">02</div>
+                            <div class="panel-text">
+                                <h3>Steel <span class="text-concrete-orange">Fixing</span></h3>
+                                <p>Precision steel fixing and mesh installation providing the tensile strength required for longevity.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="h-panel">
+                        <div class="panel-content">
+                            <div class="panel-bg">
+                                <video autoplay loop muted playsinline>
+                                    <source src="images/lavid.mp4" type="video/mp4">
+                                </video>
+                            </div>
+                            <div class="panel-overlay"></div>
+                            <div class="panel-number">03</div>
+                            <div class="panel-text">
+                                <h3>Pour <span class="text-concrete-orange">& Finish</span></h3>
+                                <p>Expert concrete placement and leveling, ensuring a flawless architectural finish.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <section class="parallax-extension" id="contact">
+                <div class="extension-bg"></div>
+                
+                <div class="extension-wrapper">
+                    
+                    <div class="content-row top-row">
+                        <div class="ext-left">
+                            <h2>BUILT TO<br>LAST.</h2>
+                            <p>Our commitment to quality ensures that every pour stands the test of time. From residential slabs to commercial infrastructure.</p>
+                            <a href="#contact-form-area" class="mag-btn" style="border-color: white; color: white;">
+                                <span class="inner">Start Project</span>
+                            </a>
+                        </div>
+
+                        <div class="stats-container">
+                            <div class="stat-box">
+                                <h3 class="number">10,000+</h3>
+                                <p class="label">Projects Completed</p>
+                            </div>
+                            <div class="stat-box">
+                                <h3 class="number">35+</h3>
+                                <p class="label">Years Experience</p>
+                            </div>
+                            <div class="stat-box">
+                                <h3 class="number">8+</h3>
+                                <p class="label">Staff Members</p>
+                            </div>
+                            <div class="stat-box">
+                                <h3 class="number">77+</h3>
+                                <p class="label">Suburbs in SA</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider-line"></div>
+
+                    <div id="contact-form-area" class="content-row bottom-row">
+                        
+                        <div class="footer-left">
+                            <h2>
+                                TALK TO <br>
+                                <span class="anthony-text">ANTHONY.</span>
+                            </h2>
+                            
+                            <p>From residential slabs to large-scale commercial infrastructure, we lay the groundwork for South Australia's future.</p>
+                            
+                            <div class="contact-details">
+                                <div class="detail-box">
+                                    <span class="label">Enquiries</span>
+                                    <a href="mailto:admin@laconcrete.com.au" class="val">admin@laconcrete.com.au</a>
+                                </div>
+                                <div class="detail-box">
+                                    <span class="label">Call Us</span>
+                                    <a href="tel:+61800000000" class="val">(08) 8234 5678</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="footer-right">
+                            <form class="architectural-form">
+                                <div class="input-row">
+                                    <div class="input-wrap">
+                                        <input type="text" placeholder="Name" required>
+                                    </div>
+                                    <div class="input-wrap">
+                                        <input type="email" placeholder="Email" required>
+                                    </div>
+                                </div>
+
+                                <div class="input-wrap">
+                                    <input type="text" placeholder="Phone / Mobile" required>
+                                </div>
+
+                                <div class="input-wrap">
+                                    <textarea rows="4" placeholder="Project Details (Location, Size, Type)" required></textarea>
+                                </div>
+
+                                <button type="submit" class="mag-btn footer-btn">
+                                    <span class="inner">Send Message</span>
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <footer class="site-footer">
+                <div class="footer-copyright">
+                    <p>&copy; 2024 LA Concrete. Built to Last.</p>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+    <script>
+        gsap.registerPlugin(ScrollTrigger);
+
+        // =========================================================================
+        // 1. TYPEWRITER LOGIC (Full Sentence)
+        // =========================================================================
+        function initTypewriter(elementId, phrases) {
+            const element = document.getElementById(elementId);
+            if (!element || !phrases || !phrases.length) return;
+            let phraseIndex = 0;
+            let charIndex = phrases[0].length;
+            let isDeleting = true;
+            
+            function type() {
+                const currentPhrase = phrases[phraseIndex];
+                
+                if (isDeleting) {
+                    element.innerText = currentPhrase.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    element.innerText = currentPhrase.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let typeSpeed = isDeleting ? 30 : 60;
+
+                if (!isDeleting && charIndex === currentPhrase.length) {
+                    isDeleting = true;
+                    typeSpeed = 3000;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    typeSpeed = 200;
+                }
+
+                setTimeout(type, typeSpeed);
+            }
+            type();
+        }
+
+        // =========================================================================
+        // STATS ANIMATIONS (UPDATED: CLEAN & HOLLOW)
+        // =========================================================================
+
+        // 1. Animate the Cards Fading In
+        gsap.fromTo('.stat-box', {
+            y: 50,
+            opacity: 0
+        }, {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.1,
+            ease: 'power2.out',
+            scrollTrigger: {
+                trigger: '.parallax-extension',
+                start: 'top 60%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        // 2. Count Up Numbers (No Glow/Color Change)
+        gsap.utils.toArray('.stat-box').forEach((box) => {
+            const numEl = box.querySelector('.number');
+            if (!numEl) return;
+
+            let text = numEl.textContent.trim();
+            const hasPlus = text.endsWith('+');
+            const hasComma = text.includes(',');
+            text = text.replace(/[^0-9]/g, ''); // Strip non-numbers
+            const target = parseFloat(text);
+
+            // Reset to 0 initially
+            numEl.innerText = `0${hasPlus ? '+' : ''}`;
+
+            gsap.to(numEl, {
+                innerText: target, // Animate the property
+                duration: 2.5,
+                ease: 'power1.out',
+                snap: { innerText: 1 }, // Snap to whole numbers
+                scrollTrigger: {
+                    trigger: box,
+                    start: 'top 75%'
+                },
+                onUpdate: function() {
+                    // Format number with commas if needed
+                    let val = Math.ceil(this.targets()[0].innerText);
+                    if (hasComma) val = val.toLocaleString();
+                    numEl.innerText = `${val}${hasPlus ? '+' : ''}`;
+                }
+            });
+        });
+
+        // =========================================================================
+        // "BUILT TO LAST" ENTRANCE
+        // =========================================================================
+        const extLeft = document.querySelector('.ext-left');
+
+        // 1. Text Slide Up
+        gsap.from(extLeft, {
+            y: 100,
+            opacity: 0,
+            duration: 1.5,
+            ease: 'power4.out',
+            scrollTrigger: {
+                trigger: '.parallax-extension',
+                start: 'top 60%',
+                toggleActions: 'play none none reverse'
+            }
+        });
+
+        const lenis = new Lenis({ duration: 1.2, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+                // =========================================================================
+        // LOADER SEQUENCE
+        // =========================================================================
+        function initPageAnimations() {
+            const tlHero = gsap.timeline();
+
+            // Hero Reveals (UPDATED FOR VIDEO CARDS)
+            tlHero.from('.video-card', { 
+                y: 100,
+                scale: 1.1,
+                opacity: 0, 
+                duration: 1.5, 
+                stagger: 0.2,
+                ease: 'power4.out' 
+            });
+
+            // =========================================================================
+            // 2. FALLING TEXT + SYNCED ARROW
+            // =========================================================================
+            tlHero.from('.h1-reveal', { 
+                y: -window.innerHeight, 
+                opacity: 0,
+                duration: 2.5,
+                ease: 'power2.out',
+                onComplete: () => {
+                    setTimeout(() => {
+                        initTypewriter('typing-text', [
+                            'ARCHITECTURAL FOUNDATIONS', 
+                            'BESPOKE FINISHES', 
+                            'INDUSTRIAL STRENGTH'
+                        ]);
+                    }, 500);
+                }
+            }, '-=1')
+            .from('.scroll-indicator', {
+                y: -50,
+                opacity: 0,
+                duration: 1,
+                ease: 'bounce.out'
+            }, '-=0.5');
+
+            // Parallax Triggers
+            gsap.to('.hero-bg', { 
+                yPercent: 20,
+                ease: 'none',
+                scrollTrigger: { 
+                    trigger: '.hero', 
+                    start: 'top top', 
+                    end: 'bottom top', 
+                    scrub: true 
+                }
+            });
+            gsap.to('.scroll-indicator', {
+                opacity: 0,
+                scrollTrigger: {
+                    trigger: '.hero',
+                    start: 'top top',
+                    end: '20% top',
+                    scrub: true
+                }
+            });
+            gsap.to('.hero-content', { y: -150, opacity: 0, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: '50% top', scrub: true }});
+            gsap.fromTo('.extension-bg', 
+                { 
+                    yPercent: -30
+                },
+                { 
+                    yPercent: 0,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: '.parallax-extension',
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: true
+                    }
+                }
+            );
+        }
+
+        /* --- LOADER LOGIC (3 SECOND TIMER) --- */
+        window.addEventListener("load", function () {
+            const loader = document.getElementById("loader-wrapper");
+            
+            // Wait 3 seconds
+            setTimeout(function() {
+                loader.classList.add("loader-hidden");
+
+                loader.addEventListener("transitionend", function() {
+                    if (loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                    if (typeof initPageAnimations === "function") {
+                        initPageAnimations();
+                    }
+                });
+            }, 3000); 
+        });
+
+        // =========================================================================
+        // HORIZONTAL SCROLL LOGIC
+        // =========================================================================
+        // =========================================================================
+        let mm = gsap.matchMedia();
+
+        mm.add('(min-width: 1001px)', () => {
+            const track = document.querySelector('.horizontal-track');
+            if (!track) return;
+
+            const getScrollAmount = () => Math.max(0, track.scrollWidth - window.innerWidth);
+
+            const tween = gsap.to(track, {
+                x: () => -getScrollAmount(),
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.horizontal-scroll-wrapper',
+                    pin: true,
+                    scrub: 1, 
+                    start: 'top top',
+                    end: () => '+=' + getScrollAmount(), 
+                    invalidateOnRefresh: true
+                }
+            });
+
+            // CARDS: Vertical Rise + Hero Fade
+            gsap.utils.toArray('.panel-content').forEach((panel, i) => {
+                if (i === 0) return; 
+
+                gsap.from(panel, {
+                    y: 150,
+                    opacity: 0,
+                    duration: 1.5,
+                    ease: 'power4.out',
+                    scrollTrigger: {
+                        trigger: panel,
+                        containerAnimation: tween, 
+                        start: 'left 85%', 
+                        toggleActions: 'play none none reverse' 
+                    }
+                });
+            });
+        });
+
+        // Button Logic
+        document.querySelectorAll('.mag-btn').forEach(btn => {
+            const inner = btn.querySelector('.inner');
+            btn.addEventListener('mousemove', (e) => {
+                const r = btn.getBoundingClientRect();
+                gsap.to(btn, { x: (e.clientX - r.left - r.width/2)*0.3, y: (e.clientY - r.top - r.height/2)*0.3, duration: 0.4, ease: 'power2.out' });
+                if (inner) {
+                    gsap.to(inner, { x: (e.clientX - r.left - r.width/2)*0.1, y: (e.clientY - r.top - r.height/2)*0.1, duration: 0.4, ease: 'power2.out' });
+                }
+            });
+            btn.addEventListener('mouseleave', () => { 
+                gsap.to(btn, {x:0, y:0, duration: 0.4, ease: 'power2.out'}); 
+                if (inner) {
+                    gsap.to(inner, {x:0, y:0, duration: 0.4, ease: 'power2.out'}); 
+                }
+            });
+        });
+
+        // =========================================================================
+        // UNIVERSAL FADE-AWAY EFFECT
+        // =========================================================================
+        gsap.utils.toArray('.fade-away').forEach(element => {
+            gsap.to(element, {
+                opacity: 0,
+                y: -100,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: element,
+                    start: 'top top',
+                    end: 'bottom 20%',
+                    scrub: true
+                }
+            });
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', () => {
+                if (mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('flex');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>
+

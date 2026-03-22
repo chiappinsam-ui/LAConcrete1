@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contact L.A Concrete for your next residential or commercial project.">
+    <title>L.A CONCRETE | PROJECT INTAKE</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              'concrete-orange': '#FF4D00',
+              'concrete-orange-dark': '#CC3D00',
+              'concrete-bg': '#050505',
+              'concrete-panel': '#0A0A0A',
+              'concrete-border': '#1F1F1F',
+            },
+            fontFamily: {
+              'display': ['Kanit', 'sans-serif'],
+              'body': ['Outfit', 'sans-serif'],
+            },
+            backgroundImage: {
+              'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+            }
+          }
+        }
+      }
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700&family=Outfit:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* UPDATED PRELOADER CSS */
+        @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Dancing+Script:wght@600&display=swap');
+
+        #loader-wrapper {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f2f2f2;
+            z-index: 20000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loader-content {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            /* 1. START INVISIBLE */
+            opacity: 0;
+            /* 2. FADE IN ANIMATION (0.8s) */
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        /* "Welcome to" Cursive Styling */
+        .cursive-text {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            color: #000000;
+            margin-bottom: -10px;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: fadeUp 0.8s ease-out forwards;
+            animation-delay: 0.2s;
+        }
+
+        .brand-wrapper {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 8rem;
+            line-height: 1;
+            letter-spacing: -0.05em;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 10;
+            opacity: 0;
+            animation: simpleFade 0.8s ease-out forwards;
+            animation-delay: 0.6s;
+        }
+
+        .la-text {
+            color: #000000;
+            margin-right: 2px;
+        }
+
+        .concrete-text {
+            color: #000000;
+            animation: lightUp 0.3s ease-out forwards;
+            animation-delay: 1.2s; /* Waits for fade-in to finish before lighting up */
+        }
+
+        /* ANIMATIONS */
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes simpleFade {
+            to { opacity: 1; }
+        }
+
+        @keyframes lightUp {
+            0% { color: #000000; text-shadow: none; }
+            30% { color: #802600; text-shadow: none; } /* Flicker dark */
+            60% { color: #000000; text-shadow: none; } /* Flicker off */
+            100% { 
+                color: #ff4d00; 
+                text-shadow: 0 0 20px rgba(255, 77, 0, 0.4); /* Glow */
+            }
+        }
+
+        .loader-hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .brand-wrapper { font-size: 15vw; }
+            .cursive-text { font-size: 8vw; }
+        }
+        :root {
+            --primary: #FF4D00;
+            --dark: #050505;
+        }
+
+        /* --- GLOBAL RESET & BASE --- */
+        body {
+            background-color: var(--dark);
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        ::selection {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* --- CANVAS BACKGROUND --- */
+        #dust-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0.3;
+        }
+
+        /* --- TYPOGRAPHY UTILITIES --- */
+        .text-outline {
+            -webkit-text-stroke: 2px #ffffff;
+            color: transparent;
+        }
+        .text-outline-sm {
+            -webkit-text-stroke: 1px rgba(255,255,255,0.5);
+            color: transparent;
+        }
+
+        /* ==========================================================================
+           LIFTED PILL NAV (Matches Site)
+           ========================================================================== */
+        #pill-nav-container {
+            position: fixed;
+            top: 0.5rem;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            padding: 0 1rem;
+            pointer-events: none;
+        }
+        .pill-nav-bar {
+            pointer-events: auto;
+            background: #000000;
+            padding: 0.5rem 1rem;
+            border-radius: 100px;
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+        .nav-logo {
+            font-family: 'Kanit', sans-serif;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .nav-items-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .pill-link {
+            padding: 0.5rem 1rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: rgba(255, 255, 255, 0.7);
+            transition: color 0.3s ease;
+            letter-spacing: 0.5px;
+        }
+        .pill-link:hover, .pill-link.active {
+            color: #ff4d00;
+        }
+        .nav-quote-btn {
+            background: white;
+            color: black;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-decoration: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 100px;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .nav-quote-btn:hover {
+            background: #ff4d00;
+            color: white;
+        }
+        @media (max-width: 900px) {
+            #pill-nav-container { display: none; }
+        }
+
+        /* Custom Radio Buttons / Cards */
+        .option-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .option-card:hover {
+            border-color: rgba(255, 77, 0, 0.5);
+            background: rgba(255,255,255,0.05);
+        }
+        .option-card.selected {
+            border-color: #FF4D00;
+            background: rgba(255, 77, 0, 0.05);
+        }
+        .option-card.selected .check-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        /* --- FORM TOGGLE SWITCH --- */
+        .toggle-track {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 9999px;
+            position: relative;
+            display: flex;
+            padding: 4px;
+            width: fit-content;
+            margin: 0 auto 1.5rem auto;
+        }
+        .toggle-slider {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            left: 4px;
+            width: calc(50% - 4px);
+            background: #FF4D00;
+            border-radius: 9999px;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            z-index: 0;
+        }
+        .toggle-slider.right {
+            left: 50%;
+        }
+        .toggle-btn {
+            position: relative;
+            z-index: 10;
+            padding: 0.5rem 2rem;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.5);
+            transition: color 0.3s ease;
+            cursor: pointer;
+            min-width: 140px;
+            text-align: center;
+        }
+        .toggle-btn.active {
+            color: white;
+        }
+
+        /* Input Fields */
+        .minimal-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 0;
+            color: white;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.25rem;
+            transition: all 0.3s ease;
+            outline: none;
+            border-radius: 0;
+        }
+        .minimal-input:focus {
+            border-bottom-color: #FF4D00;
+            padding-left: 0.5rem;
+        }
+        .minimal-input::placeholder {
+            color: rgba(255,255,255,0.2);
+        }
+        .minimal-label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: #FF4D00;
+            margin-bottom: 0.25rem;
+            font-weight: 700;
+        }
+
+        /* Progress Bar */
+        .progress-track {
+            width: 100%;
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            position: relative;
+            margin-bottom: 3rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: #FF4D00;
+            width: 0%;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+        .progress-glow {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: #FF4D00;
+            border-radius: 50%;
+            box-shadow: 0 0 20px #FF4D00;
+        }
+
+        /* --- FAQ ACCORDION --- */
+        .accordion-item {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .accordion-trigger {
+            width: 100%;
+            text-align: left;
+            padding: 2rem 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .accordion-trigger:hover {
+            color: #FF4D00;
+        }
+        .accordion-content {
+            height: 0;
+            overflow: hidden;
+            transition: height 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+            will-change: height;
+        }
+        .accordion-inner {
+            padding-bottom: 2rem;
+            color: rgba(255,255,255,0.7);
+            line-height: 1.8;
+        }
+        .icon-plus {
+            position: relative;
+            width: 20px;
+            height: 20px;
+        }
+        .icon-plus::before, .icon-plus::after {
+            content: '';
+            position: absolute;
+            background: currentColor;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: transform 0.3s ease;
+        }
+        .icon-plus::before { width: 100%; height: 2px; }
+        .icon-plus::after { width: 2px; height: 100%; }
+        .accordion-trigger[aria-expanded="true"] .icon-plus::after {
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+
+        /* --- BUTTONS --- */
+        .btn-primary {
+            background: white;
+            color: black;
+            font-family: 'Kanit', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 1rem 3rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .btn-primary:hover {
+            background: #FF4D00;
+            color: white;
+            box-shadow: 0 0 30px rgba(255, 77, 0, 0.3);
+        }
+
+        /* --- MAP PLACEHOLDER --- */
+        .map-frame {
+            width: 100%;
+            height: 100%;
+            transition: all 0.5s ease;
+            will-change: filter, opacity;
+        }
+    
+        /* --- ANIMATIONS --- */
+        .form-view {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .form-view.hidden-view {
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
+            transform: translateY(10px);
+        }
+        .form-view:not(.hidden-view) {
+            position: relative;
+            opacity: 1;
+            z-index: 10;
+            transform: translateY(0);
+        }
+        .form-stage {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+        }
+        .form-stage.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Form Container Fixed Height */
+        .fixed-height-container {
+            height: 600px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==========================================================================
+           SKINNY BOTTOM FOOTER
+           ========================================================================== */
+        .site-footer {
+            width: 100%;
+            background-color: #050505;
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            position: relative;
+            z-index: 10;
+        }
+        .footer-copyright {
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="loader-wrapper">
+        <div class="loader-content">
+            <div class="cursive-text">Contact</div>
+            <div class="brand-wrapper">
+                <span class="la-text">LA</span><span class="concrete-text">CONCRETE</span>
+            </div>
+        </div>
+    </div>
+<div class="fixed inset-0 z-[-2]">
+        <img src="images/la2.png" alt="Background" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-[#050505]/60"></div>
+    </div>
+
+<canvas id="dust-canvas"></canvas>
+<nav id="pill-nav-container">
+    <div class="pill-nav-bar">
+        
+        <a href="index.html" class="nav-logo">
+            LA <span style="color: #ff4d00;">CONCRETE</span>
+        </a>
+
+        <div class="nav-items-wrapper">
+            <a href="index.html" class="pill-link">Home</a>
+            <a href="services.html" class="pill-link">Services</a>
+            <a href="about.html" class="pill-link">About</a>
+            <a href="contact.html" class="pill-link active">Contact</a>
+        </div>
+
+        <a href="contact.html" class="nav-quote-btn">
+            Get Quote
+        </a>
+        
+    </div>
+</nav>
+
+    <main class="relative z-10 pt-32 pb-12 px-6 min-h-screen flex flex-col justify-center items-center">
+        <div class="w-full max-w-7xl mx-auto flex-grow flex flex-col justify-center">
+            
+            <div class="text-center mb-12 form-anim opacity-0 translate-y-10">
+                <h1 class="font-[Kanit] font-black text-5xl md:text-7xl uppercase text-white tracking-tight">CONTACT <span class="text-concrete-orange">ANTHONY</span></h1>
+                <p class="font-[Outfit] text-white/50 mt-4 tracking-widest uppercase text-sm">Direct Line & Intake System</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 w-full">
+                
+                <div class="flex flex-col gap-6 h-full">
+                    <div class="flex-1 bg-black/40 backdrop-blur-xl border border-white/10 rounded-[24px] p-8 md:p-10 flex flex-col justify-center relative overflow-hidden form-anim opacity-0 translate-y-10">
+                        <h3 class="font-[Outfit] font-bold text-xs text-white/40 mb-6 uppercase tracking-[0.2em] border-b border-white/5 pb-4">Direct Contact</h3>
+                        <ul class="space-y-8">
+                            <li class="group">
+                                <span class="block text-[10px] text-white/40 uppercase tracking-widest mb-1">Phone</span>
+                                <a href="tel:0400000000" class="font-[Kanit] text-4xl font-bold text-white hover:text-concrete-orange transition-colors">0400 000 000</a>
+                            </li>
+                            <li class="group">
+                                <span class="block text-[10px] text-white/40 uppercase tracking-widest mb-1">Email</span>
+                                <a href="mailto:info@laconcrete.com.au" class="font-[Kanit] text-2xl font-bold text-white hover:text-concrete-orange transition-colors break-all">info@laconcrete.com.au</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="flex-1 min-h-[200px] bg-black/40 backdrop-blur-xl border border-white/10 rounded-[24px] overflow-hidden relative form-anim opacity-0 translate-y-10 p-2">
+                        <div class="w-full h-full rounded-[16px] overflow-hidden relative">
+                            <iframe src="https://maps.google.com/maps?q=Adelaide,%20South%20Australia&t=&z=13&ie=UTF8&iwloc=&output=embed" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="map-frame grayscale opacity-60 hover:opacity-100 hover:grayscale-0 transition-all duration-500"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-black/40 backdrop-blur-xl border border-white/10 rounded-[24px] p-8 md:p-12 relative overflow-hidden flex flex-col h-full form-anim opacity-0 translate-y-10">
+                    <div class="flex justify-between items-start mb-12">
+                        <h2 class="font-[Kanit] font-bold text-3xl text-white uppercase">General Inquiry</h2>
+                        <div class="flex items-center gap-2 bg-white/5 px-4 py-1.5 rounded-full border border-white/10 shadow-[0_0_15px_rgba(255,255,255,0.02)] hidden sm:flex">
+                            <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shadow-[0_0_10px_#22c55e]"></span>
+                            <span class="text-white text-[10px] font-bold uppercase tracking-widest">System Online</span>
+                        </div>
+                    </div>
+
+                    <form id="contact-form" class="flex-grow flex flex-col justify-between">
+                        <div class="space-y-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                                <div class="relative pt-4">
+                                    <input type="text" class="w-full bg-transparent border-b border-white/20 pb-2 text-white font-[Outfit] text-lg focus:outline-none focus:border-concrete-orange transition-colors peer" placeholder=" " required>
+                                    <label class="absolute left-0 top-4 text-white/40 font-[Outfit] text-sm uppercase tracking-widest transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-focus:-top-1 peer-focus:text-[10px] peer-focus:text-concrete-orange peer-valid:-top-1 peer-valid:text-[10px]">First Name</label>
+                                </div>
+                                <div class="relative pt-4">
+                                    <input type="text" class="w-full bg-transparent border-b border-white/20 pb-2 text-white font-[Outfit] text-lg focus:outline-none focus:border-concrete-orange transition-colors peer" placeholder=" " required>
+                                    <label class="absolute left-0 top-4 text-white/40 font-[Outfit] text-sm uppercase tracking-widest transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-focus:-top-1 peer-focus:text-[10px] peer-focus:text-concrete-orange peer-valid:-top-1 peer-valid:text-[10px]">Last Name</label>
+                                </div>
+                            </div>
+                            <div class="relative pt-4">
+                                <input type="email" class="w-full bg-transparent border-b border-white/20 pb-2 text-white font-[Outfit] text-lg focus:outline-none focus:border-concrete-orange transition-colors peer" placeholder=" " required>
+                                <label class="absolute left-0 top-4 text-white/40 font-[Outfit] text-sm uppercase tracking-widest transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-focus:-top-1 peer-focus:text-[10px] peer-focus:text-concrete-orange peer-valid:-top-1 peer-valid:text-[10px]">Email Address</label>
+                            </div>
+                            <div class="relative pt-4 mt-8">
+                                <textarea class="w-full bg-transparent border-b border-white/20 pb-2 text-white font-[Outfit] text-lg focus:outline-none focus:border-concrete-orange transition-colors peer h-32 resize-none" placeholder=" " required></textarea>
+                                <label class="absolute left-0 top-4 text-white/40 font-[Outfit] text-sm uppercase tracking-widest transition-all peer-placeholder-shown:text-sm peer-placeholder-shown:top-4 peer-focus:-top-1 peer-focus:text-[10px] peer-focus:text-concrete-orange peer-valid:-top-1 peer-valid:text-[10px]">Tell us about your project...</label>
+                            </div>
+                        </div>
+
+                        <div class="mt-12 pt-8 border-t border-white/10 text-right">
+                            <button type="submit" class="bg-white text-black font-[Kanit] font-bold uppercase tracking-widest text-sm px-10 py-4 rounded-full hover:bg-concrete-orange hover:text-white transition-colors duration-300">
+                                Send Message
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-copyright">
+            <p>&copy; 2026 LA Concrete. Built to Last.</p>
+        </div>
+    </footer>
+
+    <script>
+        // --- 1. SETUP & INITIALIZATION ---
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        // --- 2. OPTIMIZED PARTICLE ENGINE ---
+        const canvas = document.getElementById('dust-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        const PARTICLE_COUNT = 40;
+
+        function resizeCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.3;
+                this.vy = (Math.random() - 0.5) * 0.3;
+                this.size = Math.random() * 2;
+                this.color = `rgba(255, 255, 255, ${Math.random() * 0.08})`;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if(this.x < 0) this.x = width;
+                if(this.x > width) this.x = 0;
+                if(this.y < 0) this.y = height;
+                if(this.y > height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        initParticles();
+        animateParticles();
+
+        // --- 3. PAGE ANIMATIONS & LOADER ---
+        
+        /* --- LOADER LOGIC (3 SECOND TIMER) --- */
+        window.addEventListener("load", function () {
+            const loader = document.getElementById("loader-wrapper");
+            
+            // Wait 3 seconds
+            setTimeout(function() {
+                loader.classList.add("loader-hidden");
+
+                loader.addEventListener("transitionend", function() {
+                    if (loader.parentNode) {
+                        loader.parentNode.removeChild(loader);
+                    }
+                    if (typeof initPageAnimations === "function") {
+                        initPageAnimations();
+                    }
+                });
+            }, 3000); 
+        });
+
+        function initPageAnimations() {
+            // Smooth cinematic entrance for the new glass panels
+            gsap.to('.form-anim', {
+                y: 0, 
+                opacity: 1, 
+                duration: 1.2, 
+                stagger: 0.15,
+                ease: 'power3.out'
+            });
+        }
+
+        // --- 5. FAQ ACCORDION LOGIC ---
+        document.querySelectorAll('.accordion-trigger').forEach(acc => {
+            acc.addEventListener('click', () => {
+                const expanded = acc.getAttribute('aria-expanded') === 'true';
+                const content = acc.nextElementSibling;
+
+                document.querySelectorAll('.accordion-trigger').forEach(other => {
+                    if (other !== acc) {
+                        other.setAttribute('aria-expanded', 'false');
+                        other.nextElementSibling.style.height = '0px';
+                        other.classList.remove('text-concrete-orange');
+                    }
+                });
+
+                acc.setAttribute('aria-expanded', !expanded);
+                content.style.height = expanded ? '0px' : content.scrollHeight + 'px';
+                acc.classList.toggle('text-concrete-orange');
+            });
+        });
+
+        // --- 6. SMART NAVIGATION HIDE ---
+        const nav = document.querySelector('nav');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                nav.classList.add('scrolled');
+            } else {
+                nav.classList.remove('scrolled');
+            }
+
+            if (window.scrollY > lastScrollY && window.scrollY > 100) {
+                nav.classList.add('nav-hidden');
+            } else {
+                nav.classList.remove('nav-hidden');
+            }
+            lastScrollY = window.scrollY;
+        });
+
+        // Mobile Menu
+        const menuToggle = document.getElementById('menuToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (menuToggle && mobileMenu) {
+            menuToggle.addEventListener('click', () => {
+                if (mobileMenu.classList.contains('hidden')) {
+                    mobileMenu.classList.remove('hidden');
+                    mobileMenu.classList.add('flex');
+                } else {
+                    mobileMenu.classList.add('hidden');
+                    mobileMenu.classList.remove('flex');
+                }
+            });
+        }
+
+        // Nav Link Hovers
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('mousemove', (e) => {
+                const r = link.getBoundingClientRect();
+                gsap.to(link, {
+                    x: (e.clientX - r.left - r.width / 2) * 0.15,
+                    y: (e.clientY - r.top - r.height / 2) * 0.15,
+                    scale: 1.05,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+
+            link.addEventListener('mouseleave', () => {
+                gsap.to(link, { x: 0, y: 0, scale: 1, duration: 0.3, ease: 'power2.out' });
+            });
+        });
+
+        // Logo Magnetic Hover
+        const logo = document.querySelector('.logo');
+        if (logo) {
+            logo.addEventListener('mousemove', (e) => {
+                const r = logo.getBoundingClientRect();
+                gsap.to(logo, {
+                    x: (e.clientX - r.left - r.width / 2) * 0.1,
+                    y: (e.clientY - r.top - r.height / 2) * 0.1,
+                    scale: 1.03,
+                    duration: 0.3,
+                    ease: 'power2.out'
+                });
+            });
+
+            logo.addEventListener('mouseleave', () => {
+                gsap.to(logo, { x: 0, y: 0, scale: 1, duration: 0.3, ease: 'power2.out' });
+            });
+        }
+    </script>
+</body>
+</html>
